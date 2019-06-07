@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"target": "esnext",
+		"module": "esnext",
+		"moduleResolution": "node",
+		"jsx": "preserve",
+		"outDir": "./.artefacts",
+		"strict": false,
+		"baseUrl": "./",
+		"inlineSourceMap": false,
+		"sourceMap": true,
+		"allowSyntheticDefaultImports": true,
+		"paths": {
+			"@/*": ["./*"]
+		},
+		"types": ["node", "webpack-env"],
+		"esModuleInterop": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true
+	}
+}

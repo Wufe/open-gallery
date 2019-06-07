@@ -1,0 +1,4 @@
+{
+    "presets": [ "@babel/preset-react", [ "@babel/preset-env", { "targets": { "browsers": "> 5%" }, "modules": false }]],
+    "plugins": [ "@loadable/babel-plugin", "react-hot-loader/babel" ]
+}
