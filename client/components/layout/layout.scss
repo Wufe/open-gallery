@@ -1,0 +1,41 @@
+@keyframes fadeIn {
+	from { opacity: 0 }
+	to { opacity: 1 }
+}
+
+.layout__component {
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+
+	.layout__main-content {
+		flex: 1;
+		transition: .2s filter ease-in-out;
+
+		&.layout__main-content--blur {
+			filter: blur(5px);
+		}
+	}
+
+	.layout__modals-container {
+		z-index: 1;
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: rgba(black, .2);
+		animation: .2s fadeIn ease-in;
+
+		> *:first-child {
+			min-height: 100px;
+			min-width: 100px;
+			background: #FAFAFC;
+			border-radius: 3px;
+			box-shadow: 0 0 15px rgba(black, .3);
+		}
+	}
+}

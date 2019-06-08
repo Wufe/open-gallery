@@ -27,6 +27,7 @@ module.exports = (target, hmr = false) => {
 		rules: [
 			{
 				test: /\.css$/,
+				exclude: /node_modules/,
 				use: [
 					{
 						loader: MiniCssExtractPlugin.loader,
@@ -38,6 +39,7 @@ module.exports = (target, hmr = false) => {
 			},
 			{
 				test: /\.scss$/,
+				exclude: /node_modules/,
 				use: [
 					{
 						loader: MiniCssExtractPlugin.loader,
@@ -57,7 +59,10 @@ module.exports = (target, hmr = false) => {
 						loader: 'babel-loader'
 					},
 					{
-						loader: 'ts-loader'
+						loader: 'ts-loader',
+						options: {
+							compilerOptions: target === 'web' ? {} : {}
+						}
 					}
 				]
 			}

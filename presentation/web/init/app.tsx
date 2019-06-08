@@ -52,7 +52,7 @@ class TemplateRenderer {
 	renderTemplate = (template: string, payload: ServerEntryPayload) =>
 		this.templates[template]
 			.content
-			.replace(`{{title}}`, '')
+			.replace(`{{title}}`, 'Open gallery')
 			.replace(`{{html}}`, payload.html)
 			.replace(`{{links}}`, payload.assets.links)
 			.replace(`{{styles}}`, payload.assets.styles)
