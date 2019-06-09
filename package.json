@@ -4,9 +4,10 @@
 	"main": "index.js",
 	"license": "MIT",
 	"scripts": {
-		"build:dev": "webpack",
-		"build:dev:watch": "yarn build:dev --watch",
-		"dev": "yarn build:dev:watch"
+		"build": "webpack",
+		"build:watch": "yarn build --watch",
+		"build:prod": "cross-env NODE_ENV=production yarn build",
+		"dev": "cross-env NODE_ENV=development yarn build:watch"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.4.5",
@@ -60,6 +61,7 @@
 		"@wufe/mapper": "^0.5.0",
 		"apollo-server": "^2.5.0",
 		"axios": "^0.19.0",
+		"cross-env": "^5.2.0",
 		"express": "^4.17.1",
 		"faker": "^4.1.0",
 		"graphql": "^14.3.1",

@@ -60,8 +60,10 @@ class TemplateRenderer {
 
 }
 
-// // TODO: Might think to fallback to production by default
-const isProd = process.env.NODE_ENV === 'production';
+const isProd = process.env.NODE_ENV !== 'development';
+console.log(`Environment: ${isProd ? 'production' : 'development'}`);
+
+const loggerInstance = Logger(isProd ? 'tiny' : 'dev');
 
 export const initApp = async () => {
 	const router = Express.Router();
@@ -69,32 +71,23 @@ export const initApp = async () => {
 	
 	const templateRenderer = new TemplateRenderer();
 
-	let app = Express();
-
-	router.use(Logger('dev'));
+	router.use(loggerInstance);
 
 	if (!isProd) {
-		const webpackDevServer = await import('webpack-dev-server')
-			.then(x => x.default);
-		const webpack = await import('webpack')
-			.then(x => x.default);
-		const webpackConfigurationBuilder = await import('../../../webpack.config.js')
-			.then(x => x.client);
+		const webpack = await import('webpack').then(x => x.default);
+		const webpackConfigurationBuilder = await import('../../../webpack.config.js').then(x => x.client);
 		const webConfig = webpackConfigurationBuilder('web', true);
 		const compiler = webpack([webConfig]);
-		const devMiddleware = await import('webpack-dev-middleware')
-			.then(x => x.default);
-		const middleware = devMiddleware(compiler, {
-			publicPath: webConfig.output.publicPath.slice(0, webConfig.output.publicPath.length -1),
+		const devMiddleware = await import('webpack-dev-middleware').then(x => x.default);
+		router.use(devMiddleware(compiler, {
+			publicPath: webConfig.output.publicPath,//.slice(0, webConfig.output.publicPath.length -1),
 			stats: {
 				assets: false,
 				modules: false
 			},
 			logLevel: 'error'
-		});
-		router.use(middleware);
-		const hotMiddleware = await import('webpack-hot-middleware')
-			.then(x => x.default);
+		}));
+		const hotMiddleware = await import('webpack-hot-middleware').then(x => x.default);
 		router.use(hotMiddleware(compiler));
 	}
 
