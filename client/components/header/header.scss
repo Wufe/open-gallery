@@ -1,0 +1,14 @@
+@import "../../styles/index.scss";
+
+.header__container {
+	max-width: 1200px;
+	margin: 10px auto;
+	padding: 15px 20px;
+
+	.header {
+		font-family: $font-family;
+		font-size: 3rem;
+		color: #FAFAFA;
+		font-weight: 100;
+	}
+}

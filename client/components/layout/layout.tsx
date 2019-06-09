@@ -3,6 +3,8 @@ import './layout.scss';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { GlobalState } from '@/client/redux/state/global-state';
 import { openModal, closeModal } from '@/client/redux/action/modal-action';
+import { Header } from '../header/header';
+import { ModalState, ModalModuleOwnState } from '@/client/redux/state/modal-state';
 
 type OwnProps = {
 	routes: JSX.Element;
@@ -19,11 +21,11 @@ type DispatchProps = {
 
 type Props = OwnProps & StateProps & DispatchProps;
 
-export const mapStateToProps: MapStateToProps<StateProps, OwnProps, GlobalState> = state => ({
-	isOpen: state.modal.open
+const mapStateToProps: MapStateToProps<StateProps, OwnProps, ModalModuleOwnState> = state => ({
+	isOpen: state.modalHandling.open
 });
 
-export const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = dispatch => ({
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = dispatch => ({
 	open: () => dispatch(openModal()),
 	close: () => dispatch(closeModal())
 });
@@ -45,6 +47,7 @@ export const Layout = connect(mapStateToProps, mapDispatchToProps)(class extends
 		<div className="layout__component">
 			<div
 				className={`layout__main-content ${this.props.isOpen ? 'layout__main-content--blur' : ''}`}>
+				<Header />
 				{this.props.routes}
 			</div>
 			{this.props.isOpen && <div

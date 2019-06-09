@@ -1,40 +1,80 @@
 import * as React from 'react';
-import loadable from '@loadable/component';
+import loadable, { LoadableLibrary } from '@loadable/component';
+import { LazyLoadImageContainer, CustomPhotoProps } from '../lazy-load/lazy-load-image-container';
+import { LazyLoadRepo } from '@/client/repo/lazy-load-repo';
+import { LazyLoadImage } from '../lazy-load/lazy-load-image';
+import { PhotoProps } from 'react-photo-gallery';
+import { MapStateToProps, connect, MapDispatchToProps } from 'react-redux';
+import { PhotoModuleOwnState } from '@/client/redux/state/photo-state';
+import Gallery from 'react-photo-gallery';
+import { requestPhotoFetch } from '@/client/redux/action/photo-action';
 
-type Photo = {
-	src: string;
-	width: number;
-	height: number;
-	key: string;
+type OwnProps = {};
+
+type StateProps = {
+	photos: GalleryPhoto[];
+	fetching: boolean;
+};
+
+type DispatchProps = {
+	requestPhotos: (from?: string) => void;
 }
 
-const getPhotos = (): Photo[] => new Array(200)
-	.fill(null)
-	.map((_, i) => {
-		const width = Math.round((Math.floor(Math.random() * 500) + 600)/10)*10;
-		const height = Math.round((Math.floor(Math.random() * 400) + 300)/10)*10;
-		return {
-			key: `${i}`,
-			src: `https://source.unsplash.com/random/${width}x${height}`,
-			width: width,//Math.floor(Math.random() * 4) +1,
-			height: height//Math.floor(Math.random() * 4) +1
-		}
-	});
+type Props = OwnProps & StateProps & DispatchProps;
 
-const Gallery = loadable(() => import('react-photo-gallery'), {
+export type GalleryPhoto = PhotoProps<CustomPhotoProps>;
+
+const LazyRepo = loadable.lib(() => import('@/client/repo/lazy-load-repo'), {
 	ssr: false
+})
+
+const mapStateToProps: MapStateToProps<StateProps, OwnProps, PhotoModuleOwnState> = state => ({
+	photos: state.photoHandling.photos
+		.map(x => ({
+			...x,
+			key: x.uuid
+		}) as GalleryPhoto),
+	fetching: state.photoHandling.fetching
 });
 
-export class PhotoGallery extends React.Component<{}, {photos: Photo[]}> {
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = dispatch => ({
+	requestPhotos: (from?: string) => dispatch(requestPhotoFetch(from))
+});
 
-	constructor(props: {}) {
-		super(props);
-		this.state = {
-			photos: getPhotos()
+const PhotoGallery = connect(mapStateToProps, mapDispatchToProps)(class extends React.Component<Props> {
+
+	componentDidMount() {
+		window.addEventListener('scroll', this.onScroll)
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener('scroll', this.onScroll);
+	}
+
+	onScroll = (event: Event) => {
+		const totalScroll = window.document.body.scrollHeight;
+		const currentScroll = window.scrollY;
+		const percentage = (currentScroll / totalScroll) * 100;
+		if (percentage > 80 && !this.props.fetching) {
+			this.props.requestPhotos(this.props.photos[this.props.photos.length -1].uuid);
 		}
 	}
 
+	constructor(props: Props) {
+		super(props);
+	}
+
 	render = () => <>
-		<Gallery photos={this.state.photos} direction={"column"} />
+		<LazyRepo>
+			{(lazy) => {
+				const instance = lazy.buildLazy();
+				return <Gallery
+					direction={"column"}
+					photos={this.props.photos.map(x => ({...x, lazy: instance }))}
+					renderImage={LazyLoadImage} />;
+			}}
+		</LazyRepo>
 	</>;
-}
+});
+
+export default PhotoGallery;

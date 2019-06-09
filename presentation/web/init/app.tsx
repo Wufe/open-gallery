@@ -1,11 +1,11 @@
 import * as React from 'react';
 import Express from 'express';
 import { resolve, join, basename } from 'path';
-import { readFileSync } from 'fs';
+import FS, { readFileSync } from 'fs';
 import { ChunkExtractor, ChunkExtractorManager } from '@loadable/server';
 import { renderToString } from 'react-dom/server';
 import Logger from 'morgan';
-import WebpackDevServer from 'webpack-dev-server';
+import { ApiController } from '../controllers/api-controller';
 
 type ServerEntryPayload = {
 	html: string;
@@ -86,9 +86,6 @@ export const initApp = async () => {
 			.then(x => x.default);
 		const middleware = devMiddleware(compiler, {
 			publicPath: webConfig.output.publicPath.slice(0, webConfig.output.publicPath.length -1),
-			writeToDisk(filePath) {
-				return /dist\/node\//.test(filePath) || /loadable\-stats/.test(filePath) || /hot\-update/.test(filePath);
-			},
 			stats: {
 				assets: false,
 				modules: false
@@ -135,6 +132,9 @@ export const initApp = async () => {
 	}
 
 	router.use(Express.static(resolve(__dirname, '..', 'public')));
+
+	ApiController.register(router);
+
 	router.get(["/", "/about"], (req, res) => {
 		const context = {};
 		const payload = generateSSRPayload({

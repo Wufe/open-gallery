@@ -1,0 +1,36 @@
+@keyframes fadeIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+.lazy__container {
+	background-color: #434343;
+	overflow: hidden;
+	overflow: hidden;
+	position: relative;
+
+	&.lazy__container--selectable {
+		&:hover {
+			cursor: pointer;
+			outline: 1px solid #06BEFA;
+		}
+	}
+
+	.lazy__image {
+		opacity: 0;
+		// -webkit-transition: .4s opacity ease-in;
+		// transition: .4s opacity ease-in;
+		// -webkit-transform: translateZ(0);
+		transition: transform .25s cubic-bezier(0.0,0.0,0.2,1),opacity linear .25s;
+
+		&.lazy__image--visible {
+			opacity: 1;
+			animation: .4s fadeIn ease-in;
+		}
+
+		&.lazy__image--selected {
+			transform: translateZ(0px) scale3d(0.9, 0.9, 1);
+  			transition: transform .25s cubic-bezier(0.0,0.0,0.2,1),opacity linear .25s;
+		}
+	}
+}

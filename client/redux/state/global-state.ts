@@ -1,5 +1,7 @@
-import { ModalState } from "./modal-state";
+import { ModalState, ModalModuleOwnState } from "./modal-state";
+import { PhotoHandlingState, PhotoModuleOwnState } from "./photo-state";
 
 export type GlobalState = {
-	modal: ModalState;
+	modal: ModalModuleOwnState;
+	photo: PhotoModuleOwnState;
 }

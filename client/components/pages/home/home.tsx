@@ -1,6 +1,7 @@
 import * as React from 'react';
 import loadable from '@loadable/component';
-import { PhotoGallery } from '../../gallery/photo-gallery';
+import { DynamicModuleLoader } from 'redux-dynamic-modules';
+import { getPhotoModule } from '@/client/redux/module/photo-module';
 
 const settings = {
 	dots: true,
@@ -10,52 +11,13 @@ const settings = {
 	slidesToScroll: 1
 }
 
-// const Slider = loadable(() => import('react-slick'), { ssr: false });
+const PhotoGallery = loadable(() => import('@/client/components/gallery/photo-gallery'), {
+	ssr: false
+})
 
 const Home = () =>
-	<PhotoGallery />;
-	// <div style={{
-	// 	textAlign: 'center',
-	// 	width: '800px',
-	// 	margin: '0 auto'
-	// }}>
-	// 	<Slider>
-	// 		<div style={{
-	// 			textAlign: 'center',
-	// 			display: 'flex',
-	// 			justifyContent: 'center'
-	// 		}}>
-	// 			<img src="https://source.unsplash.com/random" alt="" />
-	// 		</div>
-	// 		<div style={{
-	// 			textAlign: 'center',
-	// 			display: 'flex',
-	// 			justifyContent: 'center'
-	// 		}}>
-	// 			<img src="https://source.unsplash.com/random" alt="" />
-	// 		</div>
-	// 		<div style={{
-	// 			textAlign: 'center',
-	// 			display: 'flex',
-	// 			justifyContent: 'center'
-	// 		}}>
-	// 			<img src="https://source.unsplash.com/random" alt="" />
-	// 		</div>
-	// 		<div style={{
-	// 			textAlign: 'center',
-	// 			display: 'flex',
-	// 			justifyContent: 'center'
-	// 		}}>
-	// 			<img src="https://source.unsplash.com/random" alt="" />
-	// 		</div>
-	// 		<div style={{
-	// 			textAlign: 'center',
-	// 			display: 'flex',
-	// 			justifyContent: 'center'
-	// 		}}>
-	// 			<img src="https://source.unsplash.com/random" alt="" />
-	// 		</div>
-	// 	</Slider>
-	// </div>;
+	<DynamicModuleLoader modules={[getPhotoModule()]}>
+		<PhotoGallery />
+	</DynamicModuleLoader>;
 
 export default Home;
