@@ -3,8 +3,8 @@ import { LazyLoadRepo } from '@/client/repo/lazy-load-repo';
 import { PhotoProps, RenderImageProps } from 'react-photo-gallery';
 import { LoadableLibrary } from '@loadable/component';
 import './lazy-load-image.scss';
-import { PhotoAdditionalProperties } from '@/client/redux/state/photo-state';
-import { connect, MapDispatchToProps } from 'react-redux';
+import { PhotoAdditionalProperties, PhotoModuleOwnState } from '@/client/redux/state/photo-state';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { selectPhoto, unselectPhoto } from '@/client/redux/action/photo-action';
 
 export type CustomPhotoProps = PhotoAdditionalProperties & {
@@ -13,7 +13,9 @@ export type CustomPhotoProps = PhotoAdditionalProperties & {
 
 type OwnProps = RenderImageProps<CustomPhotoProps> & {};
 
-type StateProps = {};
+type StateProps = {
+	selectionEnabled: boolean;
+};
 
 type DispatchProps = {
 	select: (uuid: string) => void;
@@ -47,6 +49,10 @@ const Checkmark = ({ selected }) => (
 	</div>
 );
 
+const mapStateToProps: MapStateToProps<StateProps, OwnProps, PhotoModuleOwnState> = state => ({
+	selectionEnabled: state.photoSettings.selection.enabled
+});
+
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = dispatch => ({
 	select: uuid => dispatch(selectPhoto(uuid)),
 	unselect: uuid => dispatch(unselectPhoto(uuid))
@@ -57,7 +63,7 @@ export type LazyLoadObject = {
 	intersecting(): void;
 }
 
-export const LazyLoadImageContainer = connect(null, mapDispatchToProps)(class extends React.Component<Props, State> {
+export const LazyLoadImageContainer = connect(mapStateToProps, mapDispatchToProps)(class extends React.Component<Props, State> {
 
 	private _imageRef: React.RefObject<HTMLImageElement>;
 	private _containerRef: React.RefObject<HTMLDivElement>;
@@ -92,6 +98,16 @@ export const LazyLoadImageContainer = connect(null, mapDispatchToProps)(class ex
 		this.props.photo.lazy.remove(this);
 	}
 
+	onContainerClick = () => {
+		if (!this.props.selectionEnabled)
+			return;
+		if (this.props.photo.selected) {
+			this.props.unselect(this.props.photo.uuid);
+		} else {
+			this.props.select(this.props.photo.uuid);
+		}
+	}
+
 	render = () => {
 		const containerStyle: React.CSSProperties = {}
 		if (this.props.direction === 'column') {
@@ -106,13 +122,11 @@ export const LazyLoadImageContainer = connect(null, mapDispatchToProps)(class ex
 		if (this.props.photo.selected)
 			imgStyle.transform = `translateZ(0px) scale3d(${scaleX}, ${scaleY}, 1)`;
 
-		return <div ref={this._containerRef} className={`lazy__container lazy__container--selectable`} style={{
+		return <div ref={this._containerRef} className={`lazy__container ${this.props.selectionEnabled ? 'lazy__container--selectable' : ''}`} style={{
 			...containerStyle,
 			width: this.props.photo.width,
 			height: this.props.photo.height
-		}} onClick={() => this.props.photo.selected ?
-			this.props.unselect(this.props.photo.uuid) :
-			this.props.select(this.props.photo.uuid)}>
+		}} onClick={this.onContainerClick}>
 			<Checkmark selected={this.props.photo.selected} />
 			<img className={`lazy__image ${this.state.visible ? 'lazy__image--visible' : ''} ${this.props.photo.selected ? `lazy__image--selected` : ''}`} style={{
 				...imgStyle,

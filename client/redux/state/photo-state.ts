@@ -12,7 +12,9 @@ export type PhotoHandlingState = {
 }
 
 export type PhotoSettingsState = {
-
+	selection: {
+		enabled: boolean;
+	};
 }
 
 export type PhotoAdditionalProperties = {
@@ -27,4 +29,8 @@ export const getInitialPhotoHandlingState = (): PhotoHandlingState => ({
 	fetching: false
 });
 
-export const getInitialPhotoSettingsState = (): PhotoSettingsState => ({});
+export const getInitialPhotoSettingsState = (): PhotoSettingsState => ({
+	selection: {
+		enabled: false
+	}
+});

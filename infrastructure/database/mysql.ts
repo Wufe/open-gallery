@@ -11,7 +11,8 @@ export class MysqlDatabaseBuilder implements IDatabaseBuilder {
 			username: 'root',
 			password: 'toor',
 			host: '127.0.0.1',
-			database: 'accounting',
+			port: 3307,
+			database: 'gallery',
 			entities: [
 				ArticleEntity,
 				CategoryEntity
