@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from "typeorm";
 import { mapTo } from "@wufe/mapper";
 import { PhotoModel } from "@/domain/models/photo";
+import { PhotoFormatEntity } from "./photo-format-entity";
 
 @Entity()
 @mapTo(PhotoModel)
@@ -12,10 +13,7 @@ export class PhotoEntity {
 	uuid: string;
 
 	@Column()
-	src: string;
-
-	@Column({ default: ''})
-	lowQualityPlaceholderSrc: string = '';
+	src: string;	
 
 	@Column()
 	width: number;
@@ -31,4 +29,7 @@ export class PhotoEntity {
 
 	@UpdateDateColumn()
 	updatedAt: string;
+
+	@OneToMany(type => PhotoFormatEntity, format => format.photo)
+	formats: PhotoFormatEntity[];
 }

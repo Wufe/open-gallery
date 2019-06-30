@@ -1,15 +1,12 @@
 const client = require('./config/webpack.config.client');
 const server = require('./config/webpack.config.server');
 
-const isProd = process.env.NODE_ENV === 'production';
-
 const modules = [
 	client('node'),
-	server
+	client('web'),
+	server('frontend'),
+	server('backend'),
 ];
-
-if (isProd)
-	modules.push(client('web'));
 
 module.exports = modules;
 

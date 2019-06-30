@@ -6,11 +6,11 @@ const webpack = require('webpack');
 
 const merge = require('webpack-merge');
 
-module.exports = merge(base, {
+module.exports = (entry = 'backend') => merge(base, {
 	target: 'node',
 	devtool: 'inline-source-map',
 	entry: {
-		server: path.resolve(__dirname, '..', 'presentation/index.ts')
+		[`server-${entry}`]: path.resolve(__dirname, '..', `presentation/web/server-${entry}-entry.ts`)
 	},
 	output: {
 		path: path.resolve(__dirname, '..', 'dist'),

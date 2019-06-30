@@ -4,6 +4,8 @@ import { createConnection, Connection } from "typeorm";
 import { ArticleEntity } from "../../data/entities/article-entity";
 import { CategoryEntity } from "../../data/entities/category-entity";
 import { container } from 'tsyringe';
+import { PhotoEntity } from '@/data/entities/photo-entity';
+import { PhotoFormatEntity } from '@/data/entities/photo-format-entity';
 
 export class Sqlite3DatabaseBuilder implements IDatabaseBuilder {
 	initConnection = (): Promise<Connection> => {
@@ -11,8 +13,8 @@ export class Sqlite3DatabaseBuilder implements IDatabaseBuilder {
 			type: 'sqlite',
 			database: resolve(__dirname, 'db.db'),
 			entities: [
-				ArticleEntity,
-				CategoryEntity
+				PhotoEntity,
+				PhotoFormatEntity
 			],
 			synchronize: true,
 			logger: "simple-console",

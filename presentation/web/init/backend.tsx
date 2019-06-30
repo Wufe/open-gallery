@@ -61,35 +61,17 @@ class TemplateRenderer {
 }
 
 const isProd = process.env.NODE_ENV !== 'development';
-console.log(`Environment: ${isProd ? 'production' : 'development'}`);
+console.log(`Backend server environment: ${isProd ? 'production' : 'development'}`);
 
 const loggerInstance = Logger(isProd ? 'tiny' : 'dev');
 
-export const initApp = async () => {
+export const initBackEndApp = async () => {
 	const router = Express.Router();
 	const PORT = 8082;
 	
 	const templateRenderer = new TemplateRenderer();
 
 	router.use(loggerInstance);
-
-	if (!isProd) {
-		const webpack = await import('webpack').then(x => x.default);
-		const webpackConfigurationBuilder = await import('../../../webpack.config.js').then(x => x.client);
-		const webConfig = webpackConfigurationBuilder('web', true);
-		const compiler = webpack([webConfig]);
-		const devMiddleware = await import('webpack-dev-middleware').then(x => x.default);
-		router.use(devMiddleware(compiler, {
-			publicPath: webConfig.output.publicPath,//.slice(0, webConfig.output.publicPath.length -1),
-			stats: {
-				assets: false,
-				modules: false
-			},
-			logLevel: 'error'
-		}));
-		const hotMiddleware = await import('webpack-hot-middleware').then(x => x.default);
-		router.use(hotMiddleware(compiler));
-	}
 
 	const nodeStats = resolve(__dirname, './node-stats.json');
 	const webStats = resolve(__dirname, './web-stats.json');
@@ -140,7 +122,8 @@ export const initApp = async () => {
 	Express()
 		.use(router)
 		.listen(PORT, () => {
-			console.log(`Server listening on port ${PORT}`);
+			if (isProd)
+				console.log(`Web app server listening on port ${PORT}`);
 		});
 	
 }

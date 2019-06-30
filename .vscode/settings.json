@@ -1,0 +1,20 @@
+{
+	"files.exclude": {
+		"**/.classpath": true,
+		"**/.project": true,
+		"**/.settings": true,
+		"**/.factorypath": true
+	},
+	"sqltools.connections": [
+		{
+			"askForPassword": true,
+			"connectionTimeout": 30,
+			"database": "gallery",
+			"dialect": "MySQL",
+			"name": "gallery",
+			"port": 3307,
+			"server": "127.0.0.1",
+			"username": "root"
+		}
+	]
+}

@@ -18,7 +18,7 @@ export class ApiController extends Controller {
 		method: 'get',
 		path: '/images',
 		handler: controller => (req, res) => {
-			const photoEntities = new Array(50)
+			const photoEntities = new Array(60)
 				.fill(null)
 				.map((_, i) => {
 					const width = Math.round((Math.floor(Math.random() * 500) + 600)/10)*10;

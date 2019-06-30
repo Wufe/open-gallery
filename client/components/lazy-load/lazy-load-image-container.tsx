@@ -67,6 +67,7 @@ export const LazyLoadImageContainer = connect(mapStateToProps, mapDispatchToProp
 
 	private _imageRef: React.RefObject<HTMLImageElement>;
 	private _containerRef: React.RefObject<HTMLDivElement>;
+	private _destroyed = false;
 
 	constructor(props: Props) {
 		super(props);
@@ -82,6 +83,7 @@ export const LazyLoadImageContainer = connect(mapStateToProps, mapDispatchToProp
 
 	intersecting() {
 		this._imageRef.current.onload = () => {
+			if (this._destroyed) return;
 			this.setState({ visible: true });
 			this._imageRef.current.onload = undefined;
 		}
@@ -95,6 +97,7 @@ export const LazyLoadImageContainer = connect(mapStateToProps, mapDispatchToProp
 	}
 
 	componentWillUnmount() {
+		this._destroyed = true;
 		this.props.photo.lazy.remove(this);
 	}
 

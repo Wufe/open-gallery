@@ -3,6 +3,8 @@ import { Connection, createConnection } from "typeorm";
 import { ArticleEntity } from "../../data/entities/article-entity";
 import { CategoryEntity } from "../../data/entities/category-entity";
 import { container } from "tsyringe";
+import { PhotoEntity } from "@/data/entities/photo-entity";
+import { PhotoFormatEntity } from "@/data/entities/photo-format-entity";
 
 export class MysqlDatabaseBuilder implements IDatabaseBuilder {
 	initConnection = (): Promise<Connection> => {
@@ -14,8 +16,8 @@ export class MysqlDatabaseBuilder implements IDatabaseBuilder {
 			port: 3307,
 			database: 'gallery',
 			entities: [
-				ArticleEntity,
-				CategoryEntity
+				PhotoEntity,
+				PhotoFormatEntity
 			],
 			synchronize: true,
 			logger: "simple-console",
