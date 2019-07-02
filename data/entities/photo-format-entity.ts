@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, BaseEntity } from "typeorm";
 import { PhotoEntity } from "./photo-entity";
 import { mapTo } from "@wufe/mapper";
 import { PhotoFormatModel } from "@/domain/models/photo-format";
@@ -6,7 +6,7 @@ import { PhotoFormat } from "../enums/photo-enums";
 
 @Entity()
 @mapTo(PhotoFormatModel)
-export class PhotoFormatEntity {
+export class PhotoFormatEntity extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
 

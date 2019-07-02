@@ -6,6 +6,12 @@ import { ChunkExtractor, ChunkExtractorManager } from '@loadable/server';
 import { renderToString } from 'react-dom/server';
 import Logger from 'morgan';
 import { ApiController } from '../controllers/api-controller';
+import Passport from 'passport';
+import { Strategy } from 'passport-local';
+import JWT from 'jsonwebtoken';
+import { AuthenticationController } from '../controllers/authentication-controller';
+import bodyParser from 'body-parser';
+import { AdminController } from '../controllers/admin-controller';
 
 type ServerEntryPayload = {
 	html: string;
@@ -65,12 +71,16 @@ console.log(`Backend server environment: ${isProd ? 'production' : 'development'
 
 const loggerInstance = Logger(isProd ? 'tiny' : 'dev');
 
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 export const initBackEndApp = async () => {
 	const router = Express.Router();
 	const PORT = 8082;
 	
 	const templateRenderer = new TemplateRenderer();
 
+	router.use(bodyParser.urlencoded({ extended: false }));
+	router.use(bodyParser.json());
 	router.use(loggerInstance);
 
 	const nodeStats = resolve(__dirname, './node-stats.json');
@@ -107,10 +117,13 @@ export const initBackEndApp = async () => {
 	}
 
 	router.use(Express.static(resolve(__dirname, '..', 'public')));
-
+	
+	AdminController.register(router);
 	ApiController.register(router);
+	AuthenticationController.register(router);
 
-	router.get(["/", "/about"], (req, res) => {
+	router.get(["/", "/post/:id", "/album/:id", "/user/:id", "/about"], (req, res) => {
+		// const param = req.params.id;
 		const context = {};
 		const payload = generateSSRPayload({
 			context,
@@ -119,11 +132,40 @@ export const initBackEndApp = async () => {
 		res.send(templateRenderer.renderTemplate('spa.html', payload));
 	});
 
-	Express()
-		.use(router)
-		.listen(PORT, () => {
-			if (isProd)
-				console.log(`Web app server listening on port ${PORT}`);
-		});
+	let error = true;
+
+	while (error) {
+		try {
+			error = false;
+			const server = Express()
+				.use(router)
+				.listen(PORT, () => {
+					if (isProd)
+						console.log(`Web app server listening on port ${PORT}`);
+
+					process.stdin.resume();
+
+					function exitHandler(options, exitCode) {
+						server.close();
+						if (options.cleanup) console.log('clean');
+						if (exitCode || exitCode === 0) console.log(exitCode);
+						if (options.exit) process.exit();
+					}
+
+					//do something when app is closing
+					process.on('exit', exitHandler.bind(null,{cleanup:true}));
+
+					//catches ctrl+c event
+					process.on('SIGINT', exitHandler.bind(null, {exit:true}));
+
+					// catches "kill pid" (for example: nodemon restart)
+					process.on('SIGUSR1', exitHandler.bind(null, {exit:true}));
+					process.on('SIGUSR2', exitHandler.bind(null, {exit:true}));
+				});
+		} catch {
+			error = true;
+			await delay(2000);
+		}
+	}
 	
 }

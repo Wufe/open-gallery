@@ -25,7 +25,7 @@ export class ApiController extends Controller {
 					const height = Math.round((Math.floor(Math.random() * 400) + 300)/10)*10;
 					const entity = new PhotoEntity();
 					entity.uuid = uuid();
-					entity.src = `https://source.unsplash.com/random/${width}x${height}`;
+					entity.src = `https://source.unsplash.com/user/alipzn/${width}x${height}`;
 					entity.width = width;
 					entity.height = height;
 					return entity;

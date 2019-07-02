@@ -1,9 +1,11 @@
 import { PhotoHandlingState, getInitialPhotoHandlingState, getInitialPhotoSettingsState, PhotoSettingsState } from "../state/photo-state";
 import { Action, AnyAction } from "redux";
-import { SELECT_PHOTO_ACTION, UNSELECT_PHOTO_ACTION, PHOTO_FETCH_REQUESTED_ACTION, PHOTO_FETCH_SUCCEEDED_ACTION, PHOTO_FETCH_FAILED_ACTION } from "../action/photo-action";
+import { SELECT_PHOTO_ACTION, UNSELECT_PHOTO_ACTION, PHOTO_FETCH_REQUESTED_ACTION, PHOTO_FETCH_SUCCEEDED_ACTION, PHOTO_FETCH_FAILED_ACTION, PHOTO_RESET } from "../action/photo-action";
 
 export const photoSettingsReducer = (state: PhotoSettingsState = getInitialPhotoSettingsState(), action: AnyAction) => {
 	switch (action.type) {
+		case PHOTO_RESET:
+			return getInitialPhotoSettingsState();
 		default:
 			return state;
 	}
@@ -74,6 +76,10 @@ export const photoHandlingReducer = (state: PhotoHandlingState = getInitialPhoto
 					...state,
 					fetching: false
 				};
+			}
+		case PHOTO_RESET:
+			{
+				return getInitialPhotoHandlingState();
 			}
 		default:
 			return state;

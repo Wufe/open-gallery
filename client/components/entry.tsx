@@ -7,9 +7,10 @@ import { Provider } from 'react-redux';
 import { store } from '../redux/store';
 import { DynamicModuleLoader } from 'redux-dynamic-modules';
 import { getModalModule } from '../redux/module/modal-module';
+import { getIdentityModule } from '../redux/module/identity-module';
 
 const Entry = () => <Provider store={store}>
-	<DynamicModuleLoader modules={[getModalModule()]}>
+	<DynamicModuleLoader modules={[getModalModule(), getIdentityModule()]}>
 		<Layout routes={renderRoutes(routes)} />
 	</DynamicModuleLoader>
 </Provider>;

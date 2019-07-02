@@ -35,3 +35,9 @@ export const photoFetchFailed = (message: string): AnyAction => ({
 	type: PHOTO_FETCH_FAILED_ACTION,
 	payload: message
 });
+
+export const PHOTO_RESET = '@@Photo/Reset';
+
+export const photoReset = (): Action => ({
+	type: PHOTO_RESET,
+});

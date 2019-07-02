@@ -5,6 +5,9 @@ import { CategoryEntity } from "../../data/entities/category-entity";
 import { container } from "tsyringe";
 import { PhotoEntity } from "@/data/entities/photo-entity";
 import { PhotoFormatEntity } from "@/data/entities/photo-format-entity";
+import { PostEntity } from "@/data/entities/post-entity";
+import { UserEntity } from "@/data/entities/user-entity";
+import { AlbumEntity } from "@/data/entities/album-entity";
 
 export class MysqlDatabaseBuilder implements IDatabaseBuilder {
 	initConnection = (): Promise<Connection> => {
@@ -16,8 +19,11 @@ export class MysqlDatabaseBuilder implements IDatabaseBuilder {
 			port: 3307,
 			database: 'gallery',
 			entities: [
+				AlbumEntity,
+				PostEntity,
 				PhotoEntity,
-				PhotoFormatEntity
+				PhotoFormatEntity,
+				UserEntity
 			],
 			synchronize: true,
 			logger: "simple-console",

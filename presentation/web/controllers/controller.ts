@@ -16,7 +16,7 @@ const isControllerAction = (object: any): object is ControllerAction => {
 }
 
 export class Controller {
-	static attachRouter = (router: Router, path: string, controller: () => Controller) => {
+	static attachRouter = (router: Router, path: string, controller: () => Controller, ...handlers: RequestHandler[]) => {
 		const subRouter = Router();
 		const controllerInstance = controller();
 		for (const key in controllerInstance) {
@@ -25,6 +25,6 @@ export class Controller {
 				subRouter[action.method](action.path, action.handler(controller()))
 			}
 		}
-		router.use('/api', subRouter);
+		router.use(path, [...handlers, subRouter]);
 	}
 }
