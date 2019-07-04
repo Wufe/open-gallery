@@ -18,7 +18,6 @@ export type PhotoSettingsState = {
 }
 
 export type PhotoAdditionalProperties = {
-	uuid: string;
 	selected: boolean;
 };
 

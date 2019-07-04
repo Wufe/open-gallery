@@ -503,3 +503,5 @@ public/static/*
 
 dist/*
 !dist/.gitignore
+uploads
+public/uploads

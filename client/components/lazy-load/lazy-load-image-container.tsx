@@ -3,11 +3,12 @@ import { LazyLoadRepo } from '@/client/repo/lazy-load-repo';
 import { PhotoProps, RenderImageProps } from 'react-photo-gallery';
 import { LoadableLibrary } from '@loadable/component';
 import './lazy-load-image.scss';
-import { PhotoAdditionalProperties, PhotoModuleOwnState } from '@/client/redux/state/photo-state';
+import { PhotoAdditionalProperties, PhotoModuleOwnState, Photo } from '@/client/redux/state/photo-state';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { selectPhoto, unselectPhoto } from '@/client/redux/action/photo-action';
+import { PhotoModel } from '@/domain/models/photo';
 
-export type CustomPhotoProps = PhotoAdditionalProperties & {
+export type CustomPhotoProps = Photo & {
 	lazy?: LazyLoadRepo;
 };
 

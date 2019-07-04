@@ -1,6 +1,8 @@
 import { PhotoHandlingState, getInitialPhotoHandlingState, getInitialPhotoSettingsState, PhotoSettingsState } from "../state/photo-state";
 import { Action, AnyAction } from "redux";
 import { SELECT_PHOTO_ACTION, UNSELECT_PHOTO_ACTION, PHOTO_FETCH_REQUESTED_ACTION, PHOTO_FETCH_SUCCEEDED_ACTION, PHOTO_FETCH_FAILED_ACTION, PHOTO_RESET } from "../action/photo-action";
+import { ALBUM_FETCH_SUCCEEDED_ACTION } from "../action/album-action";
+import { AlbumModel } from "@/domain/models/album";
 
 export const photoSettingsReducer = (state: PhotoSettingsState = getInitialPhotoSettingsState(), action: AnyAction) => {
 	switch (action.type) {
@@ -11,7 +13,7 @@ export const photoSettingsReducer = (state: PhotoSettingsState = getInitialPhoto
 	}
 }
 
-export const photoHandlingReducer = (state: PhotoHandlingState = getInitialPhotoHandlingState(), action: Action) => {
+export const photoHandlingReducer = (state: PhotoHandlingState = getInitialPhotoHandlingState(), action: AnyAction) => {
 	switch (action.type) {
 		case SELECT_PHOTO_ACTION:
 			{
@@ -80,6 +82,14 @@ export const photoHandlingReducer = (state: PhotoHandlingState = getInitialPhoto
 		case PHOTO_RESET:
 			{
 				return getInitialPhotoHandlingState();
+			}
+		case ALBUM_FETCH_SUCCEEDED_ACTION:
+			{
+				const album = action.payload as AlbumModel;
+				return {
+					...state,
+					photos: album.photos,
+				} as PhotoHandlingState;
 			}
 		default:
 			return state;

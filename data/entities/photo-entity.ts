@@ -1,9 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToMany, ManyToOne, BaseEntity } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToMany, ManyToOne, BaseEntity, JoinTable, BeforeInsert } from "typeorm";
 import { mapTo } from "@wufe/mapper";
 import { PhotoModel } from "@/domain/models/photo";
 import { PhotoFormatEntity } from "./photo-format-entity";
 import { PostEntity } from "./post-entity";
 import { UserEntity } from "./user-entity";
+import { AlbumEntity } from "./album-entity";
+import uuid from 'uuid/v1';
 
 @Entity()
 @mapTo(PhotoModel)
@@ -13,6 +15,9 @@ export class PhotoEntity extends BaseEntity {
 
 	@Column()
 	uuid: string;
+
+	@Column()
+	name: string;
 
 	@Column()
 	src: string;	
@@ -38,6 +43,17 @@ export class PhotoEntity extends BaseEntity {
 	@ManyToOne(type => PostEntity, post => post.photos, { nullable: true })
 	post: PostEntity;
 
+	@ManyToMany(type => AlbumEntity, album => album.photos)
+	@JoinTable()
+	albums: AlbumEntity[];
+
 	@ManyToOne(type => UserEntity, user => user.photos, { nullable: true })
 	user: UserEntity;
+
+	@BeforeInsert()
+	generateUUID() {
+		if (!this.uuid) {
+			this.uuid = uuid();
+		}
+	}
 }

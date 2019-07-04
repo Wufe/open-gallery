@@ -23,3 +23,6 @@ export const LOAD_AUTHENTICATION_FINISHED_ACTION = '@@Identity/LoadAuthenticatio
 export const loadAuthenticationFinished = (): Action => ({
 	type: LOAD_AUTHENTICATION_FINISHED_ACTION
 });
+
+export const SAVE_USER_ACTION = '@@Identity/SaveUser';
+export const SET_USERNAME_ACTION = '@@Identity/SetUsername';

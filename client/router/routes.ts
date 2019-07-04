@@ -5,6 +5,7 @@ const HomePage = loadable(() => import('../components/pages/home/home'));
 const AboutPage = loadable(() => import('../components/pages/about/about'));
 const PostPage = loadable(() => import('../components/pages/post/post'));
 const AlbumPage = loadable(() => import('../components/pages/album/album'));
+const NewPostPage = loadable(() => import('../components/pages/post/new-post'));
 
 export const routes: RouteConfig[] = [
 	{
@@ -21,7 +22,11 @@ export const routes: RouteConfig[] = [
 		component: AlbumPage
 	},
 	{
+		path: '/post/new',
+		component: NewPostPage
+	},
+	{
 		path: "/post/:id",
 		component: PostPage
-	}
+	},
 ];

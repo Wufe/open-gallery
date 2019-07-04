@@ -5,6 +5,7 @@ import { UserModel } from "@/domain/models/user";
 import { PhotoEntity } from "./photo-entity";
 import { AlbumEntity } from "./album-entity";
 import { UserRole } from "../enums/user-enums";
+import { PostEntity } from "./post-entity";
 
 @Entity()
 @mapTo(UserModel, true)
@@ -15,11 +16,14 @@ export class UserEntity extends BaseEntity {
 	@Column({ nullable: true })
 	email: string;
 
-	@Column()
+	@Column({ default: '' })
 	password: string;
 
 	@Column({ nullable: true })
 	username: string;
+
+	@OneToMany(type => PostEntity, post => post.user)
+	posts: PostEntity[];
 
 	@BeforeInsert()
 	@BeforeUpdate()

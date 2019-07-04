@@ -2,6 +2,7 @@ import Express from 'express';
 import Logger from 'morgan';
 import Proxy from 'express-http-proxy';
 import { exec } from 'child_process';
+import bodyParser from 'body-parser';
 
 export const initFrontendProxyApp = async () => {
 
@@ -43,6 +44,8 @@ export const initFrontendProxyApp = async () => {
 			.on('data', data => console.error(data.toString()));
 
 		Express()
+			.use(bodyParser.json({ limit: '200mb' }))
+			.use(bodyParser.urlencoded({ extended: true, limit: '200mb' }))
 			.use(router)
 			.listen(PORT, () => {
 				console.log(`Listening on port ${PORT}`);

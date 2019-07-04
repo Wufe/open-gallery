@@ -9,6 +9,8 @@ import { PostEntity } from "@/data/entities/post-entity";
 import { UserEntity } from "@/data/entities/user-entity";
 import { AlbumEntity } from "@/data/entities/album-entity";
 
+const isProd = process.env.NODE_ENV !== 'development';
+
 export class MysqlDatabaseBuilder implements IDatabaseBuilder {
 	initConnection = (): Promise<Connection> => {
 		const connection = createConnection({
@@ -25,7 +27,7 @@ export class MysqlDatabaseBuilder implements IDatabaseBuilder {
 				PhotoFormatEntity,
 				UserEntity
 			],
-			synchronize: true,
+			synchronize: !isProd,
 			logger: "simple-console",
 			logging: ["error"]
 		});

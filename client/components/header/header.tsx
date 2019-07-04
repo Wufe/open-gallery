@@ -1,11 +1,20 @@
 import * as React from 'react';
 import './header.scss';
 
-export class Header extends React.Component {
+type Props = {
+	title?: string;
+}
+
+export class Header extends React.Component<Props> {
+
+	static defaultProps: Props = {
+		title: 'Photo gallery'
+	}
+
 	render = () =>
 		<div className="header__container">
 			<div className="header">
-				Photo gallery
+				{this.props.title!}
 			</div>
 		</div>
 }

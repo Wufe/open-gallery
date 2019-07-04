@@ -31,11 +31,15 @@
 		animation: .2s fadeIn ease-in;
 
 		> *:first-child {
-			min-height: 100px;
-			min-width: 100px;
-			background: #FAFAFC;
-			border-radius: 3px;
-			box-shadow: 0 0 15px rgba(black, .3);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+
+			.modal--uploading {
+				margin: 20px;
+				font-size: 2rem;
+				color: white;
+			}
 		}
 	}
 }

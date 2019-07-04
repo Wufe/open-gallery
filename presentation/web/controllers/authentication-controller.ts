@@ -1,4 +1,3 @@
-import { ApiController } from "./api-controller";
 import { Controller, ControllerAction } from "./controller";
 import { Router } from "express";
 import { inject, autoInjectable } from "tsyringe";

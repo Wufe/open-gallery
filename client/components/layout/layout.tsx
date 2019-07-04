@@ -12,21 +12,23 @@ type OwnProps = {
 
 type StateProps = {
 	isOpen: boolean;
+	name: string;
 }
 
 type DispatchProps = {
-	open: () => void;
+	open: (name: string) => void;
 	close: () => void;
 }
 
 type Props = OwnProps & StateProps & DispatchProps;
 
 const mapStateToProps: MapStateToProps<StateProps, OwnProps, ModalModuleOwnState> = state => ({
-	isOpen: state.modalHandling.open
+	isOpen: state.modalHandling.open,
+	name: state.modalHandling.name,
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = dispatch => ({
-	open: () => dispatch(openModal()),
+	open: name => dispatch(openModal(name)),
 	close: () => dispatch(closeModal())
 });
 
@@ -55,7 +57,10 @@ export const Layout = connect(mapStateToProps, mapDispatchToProps)(class extends
 				onClick={this.onBackdropClick}>
 				<div
 					className="modal"
-					onClick={this.onModalClick}></div>
+					onClick={this.onModalClick}>
+					{this.props.name === "uploading-modal" &&
+						<div className="modal--uploading">Caricamento in corso..</div>}
+				</div>
 			</div>}
 		</div>;
 })

@@ -5,13 +5,14 @@ import FS, { readFileSync } from 'fs';
 import { ChunkExtractor, ChunkExtractorManager } from '@loadable/server';
 import { renderToString } from 'react-dom/server';
 import Logger from 'morgan';
-import { ApiController } from '../controllers/api-controller';
+import { AlbumController } from '../controllers/album-controller';
 import Passport from 'passport';
 import { Strategy } from 'passport-local';
 import JWT from 'jsonwebtoken';
 import { AuthenticationController } from '../controllers/authentication-controller';
 import bodyParser from 'body-parser';
 import { AdminController } from '../controllers/admin-controller';
+import { PostController } from '../controllers/post-controller';
 
 type ServerEntryPayload = {
 	html: string;
@@ -79,8 +80,8 @@ export const initBackEndApp = async () => {
 	
 	const templateRenderer = new TemplateRenderer();
 
-	router.use(bodyParser.urlencoded({ extended: false }));
-	router.use(bodyParser.json());
+	router.use(bodyParser.json({ limit: '200mb' }));
+	router.use(bodyParser.urlencoded({ extended: false, limit: '200mb', type: 'application/json' }));
 	router.use(loggerInstance);
 
 	const nodeStats = resolve(__dirname, './node-stats.json');
@@ -119,8 +120,9 @@ export const initBackEndApp = async () => {
 	router.use(Express.static(resolve(__dirname, '..', 'public')));
 	
 	AdminController.register(router);
-	ApiController.register(router);
+	AlbumController.register(router);
 	AuthenticationController.register(router);
+	PostController.register(router);
 
 	router.get(["/", "/post/:id", "/album/:id", "/user/:id", "/about"], (req, res) => {
 		// const param = req.params.id;
@@ -132,40 +134,22 @@ export const initBackEndApp = async () => {
 		res.send(templateRenderer.renderTemplate('spa.html', payload));
 	});
 
-	let error = true;
-
-	while (error) {
-		try {
-			error = false;
-			const server = Express()
-				.use(router)
-				.listen(PORT, () => {
-					if (isProd)
-						console.log(`Web app server listening on port ${PORT}`);
-
-					process.stdin.resume();
-
-					function exitHandler(options, exitCode) {
-						server.close();
-						if (options.cleanup) console.log('clean');
-						if (exitCode || exitCode === 0) console.log(exitCode);
-						if (options.exit) process.exit();
-					}
-
-					//do something when app is closing
-					process.on('exit', exitHandler.bind(null,{cleanup:true}));
-
-					//catches ctrl+c event
-					process.on('SIGINT', exitHandler.bind(null, {exit:true}));
-
-					// catches "kill pid" (for example: nodemon restart)
-					process.on('SIGUSR1', exitHandler.bind(null, {exit:true}));
-					process.on('SIGUSR2', exitHandler.bind(null, {exit:true}));
-				});
-		} catch {
-			error = true;
-			await delay(2000);
-		}
-	}
+	const listen = () => {
+		const server = Express()
+			.use(bodyParser.json({ limit: '200mb' }))
+			.use(bodyParser.urlencoded({ extended: true, limit: '200mb' }))
+			.use(router)
+			.listen(PORT, () => {
+				console.log(`Web app server listening on port ${PORT}`);
+			})
+			.on('error', () => {
+				console.error('Error while starting express server.. Retrying in 5 seconds..');
+				delay(5000)
+					.then(() => {
+						listen();
+					});
+			});
+	};
+	listen();
 	
 }

@@ -2,9 +2,10 @@ import * as React from 'react';
 import loadable from '@loadable/component';
 import { DynamicModuleLoader } from 'redux-dynamic-modules';
 import { getPhotoModule } from '@/client/redux/module/photo-module';
-import PhotoGalleryContainer from '../../gallery/photo-gallery-container';
+import PhotoGallery from '../../gallery/photo-gallery';
 import { MapDispatchToProps, connect } from 'react-redux';
 import { photoReset } from '@/client/redux/action/photo-action';
+import Dashboard from '../../dashboard/dashboard';
 
 const settings = {
 	dots: true,
@@ -33,7 +34,7 @@ const Home = connect(null, mapDispatchToProps)(class extends React.Component<Pro
 	}
 
 	render() {
-		return <PhotoGalleryContainer />
+		return <Dashboard />;
 	}
 })
 

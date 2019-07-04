@@ -15,5 +15,5 @@ export const getPhotoModule = (): ISagaModule<PhotoModuleOwnState> => ({
 	sagas: [
 		photoSaga
 	],
-	initialActions: [requestPhotoFetch()]
+	initialActions: [/*requestPhotoFetch()*/]
 });
