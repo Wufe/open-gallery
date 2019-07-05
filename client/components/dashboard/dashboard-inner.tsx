@@ -6,6 +6,11 @@ import { PostModuleOwnState } from '@/client/redux/state/post-state';
 import { PostModel } from '@/domain/models/post';
 import { LOAD_POST_BEFORE_ACTION, LOAD_POST_AFTER_ACTION } from '@/client/redux/action/post-action';
 import { ApplicationModuleOwnState } from '@/client/redux/state/application-state';
+import loadable from '@loadable/component';
+
+import './dashboard.scss';
+import { LazyLoadImage } from '../lazy-load/lazy-load-image';
+import DashboardPost from './dashboard-post';
 
 type OwnProps = {}
 
@@ -20,6 +25,10 @@ type DispatchProps = {
 }
 
 type Props = OwnProps & StateProps & DispatchProps;
+
+const LazyRepo = loadable.lib(() => import('@/client/repo/lazy-load-repo'), {
+	ssr: false
+});
 
 const mapStateToProps: MapStateToProps<StateProps, OwnProps, PostModuleOwnState & ApplicationModuleOwnState> = state => ({
 	posts: state.post.posts,
@@ -59,7 +68,17 @@ const DashboardInner = connect(mapStateToProps, mapDispatchToProps)(class extend
 
 	render() {
 		return <>
-			<SubHeader title="Dashboard" />
+			<LazyRepo>
+				{lazy => {
+					const instance = lazy.buildLazy();
+					return <>
+						{this.props.posts && this.props.posts.length > 0 && <div className="posts">
+							{this.props.posts.map((post, index) => <DashboardPost key={index} post={post} lazyLoadRepo={instance} />)}
+						</div>}
+						{(!this.props.posts || !this.props.posts.length) && !this.props.loading && <SubHeader title="Attualmente non ci sono post da mostrare." />}
+					</>;
+				}}
+			</LazyRepo>
 		</>;
 	}
 });

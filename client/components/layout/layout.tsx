@@ -5,6 +5,7 @@ import { GlobalState } from '@/client/redux/state/global-state';
 import { openModal, closeModal } from '@/client/redux/action/modal-action';
 import { Header } from '../header/header';
 import { ModalState, ModalModuleOwnState } from '@/client/redux/state/modal-state';
+import Navigation from '../navigation/navigation';
 
 type OwnProps = {
 	routes: JSX.Element;
@@ -49,8 +50,9 @@ export const Layout = connect(mapStateToProps, mapDispatchToProps)(class extends
 		<div className="layout__component">
 			<div
 				className={`layout__main-content ${this.props.isOpen ? 'layout__main-content--blur' : ''}`}>
-				<Header />
+				<Header title="Elisa e Vito" />
 				{this.props.routes}
+				<Navigation />
 			</div>
 			{this.props.isOpen && <div
 				className={`layout__modals-container`}

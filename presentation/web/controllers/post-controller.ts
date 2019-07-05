@@ -13,6 +13,7 @@ import chalk from "chalk";
 import Size from 'image-size';
 import { PostEntity } from "@/data/entities/post-entity";
 import { UserEntity } from "@/data/entities/user-entity";
+import { MoreThan, LessThan } from "typeorm";
 
 @autoInjectable()
 export class PostController extends Controller {
@@ -43,23 +44,79 @@ export class PostController extends Controller {
 
 	POSTS_LIMIT = 10;
 
+	getGenericPosts = async (): Promise<PostEntity[]> => {
+		const posts = await PostEntity.find({
+			order: { id: 'DESC' },
+			take: this.POSTS_LIMIT,
+			relations: [
+				'photos',
+				'user'
+			]});
+		return posts;
+	}
+
 	after: ControllerAction<PostController> = {
 		method: 'get',
 		path: '/after',
 		handler: controller =>  async (req, res) => {
+
+			let posts: PostEntity[] = [];
+
 			const uuid = req.query.uuid;
 			if (uuid === 'void' || !uuid) {
-				const posts = await PostEntity.find({
-					order: { id: 'ASC' },
-					take: this.POSTS_LIMIT,
-					relations: [
-						'photos',
-						'user'
-					]});
-				return res.json(posts.map(x => this._mapper.map(x)));
+				posts = await this.getGenericPosts();
+			} else {
+				const relativePost = await PostEntity.findOne({
+					where: { uuid }
+				});
+				if (!relativePost) {
+					posts = await this.getGenericPosts();
+				} else {
+					console.log('relative post found');
+					console.log({ relativePost });
+					posts = await PostEntity.find({
+						where: { id: MoreThan(relativePost.id) },
+						order: { id: 'ASC' },
+						take: this.POSTS_LIMIT,
+						relations: [ 'photos', 'user' ]
+					});
+					posts = posts.sort((x, y) => y.id - x.id);
+				}
 			}
-			console.log(uuid);
-			res.json([]);
+
+			return res.json(posts.map(x => this._mapper.map(x)));	
+			
+		}
+	}
+
+	before: ControllerAction<PostController> = {
+		method: 'get',
+		path: '/before',
+		handler: controller =>  async (req, res) => {
+
+			let posts: PostEntity[] = [];
+
+			const uuid = req.query.uuid;
+			if (uuid === 'void' || !uuid) {
+				posts = await this.getGenericPosts();
+			} else {
+				const relativePost = await PostEntity.findOne({
+					where: { uuid }
+				});
+				if (!relativePost) {
+					posts = await this.getGenericPosts();
+				} else {
+					posts = await PostEntity.find({
+						where: { id: LessThan(relativePost.id) },
+						order: { id: 'DESC' },
+						take: this.POSTS_LIMIT,
+						relations: [ 'photos', 'user' ]
+					});
+				}
+			}
+
+			return res.json(posts.map(x => this._mapper.map(x)));	
+			
 		}
 	}
 
@@ -98,7 +155,7 @@ export class PostController extends Controller {
 			})
 			.on('end', () => {
 				username = username.trim() || 'Anonimo';
-				UserEntity.findOne({ where: { username }})
+				UserEntity.findOne({ where: { username }, relations: ['posts'] })
 					.then(user => {
 						if (!user) {
 							user = new UserEntity()

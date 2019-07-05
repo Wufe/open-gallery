@@ -51,7 +51,7 @@ const Checkmark = ({ selected }) => (
 );
 
 const mapStateToProps: MapStateToProps<StateProps, OwnProps, PhotoModuleOwnState> = state => ({
-	selectionEnabled: state.photoSettings.selection.enabled
+	selectionEnabled: state.photoSettings ? state.photoSettings.selection.enabled : false
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = dispatch => ({

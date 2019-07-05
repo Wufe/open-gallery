@@ -2,6 +2,7 @@
 
 .new-post__component {
 	max-width: 100%;
+	margin-bottom: 80px;
 	.drop-zone__section {
 		margin: 10px;
 		background: $nord6;
@@ -27,6 +28,7 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
+			text-align: center;
 		}
 	}
 	.new-post__files-list {
@@ -162,12 +164,30 @@
 			flex-direction: column;
 
 			.form-field__description {
-				font-size: .8rem;
+				font-size: .9rem;
 				display: flex;
 				justify-content: space-between;
+				align-items: center;
 				&--big {
 					font-size: 1.2rem;
 					margin: 3px 0;
+				}
+				margin-bottom: 5px;
+				color: lighten($nord3, 2%);
+
+				label {
+					display: flex;
+					align-items: center;
+					font-size: .75rem;
+					text-transform: uppercase;
+					max-width: 90px;
+					margin-left: 10px;
+					color: lighten($nord3, 2%);
+
+					span {
+						padding: 0 3px;
+						color: lighten($nord3, 2%);
+					}
 				}
 			}
 
@@ -176,16 +196,29 @@
 				align-items: center;
 				flex-wrap: auto;
 				input[type=text], textarea {
-					color: $nord1;
+					font: inherit;
+					font-size: .9rem;
+					color: lighten($nord3, 2%);
 					padding: 10px 25px;
 					border-radius: 3px;
-					border: 1px solid $nord3;
+					border: 1px solid darken($nord4, 5%);
 					outline: none;
 					padding: 8px 20px;
-					min-width: 170px;
+					
 					margin: 5px 0;
 					resize: none;
 					background: $nord5;
+					box-sizing: border-box;
+
+					@include small-up {
+						min-width: 280px;
+					}
+					@include media(small-to-big-screen) {
+						min-width: 340px;
+					}
+					@include medium-up {
+						min-width: 500px;
+					}
 
 					&[disabled] {
 						background: darken(desaturate($nord5, 5%), 5%);
@@ -194,18 +227,6 @@
 
 					&.warning {
 						border-color: $nord11;
-					}
-				}
-				label {
-					display: flex;
-					align-items: center;
-					font-size: .75rem;
-					text-transform: uppercase;
-					max-width: 90px;
-					margin-left: 10px;
-
-					span {
-						padding: 0 3px;
 					}
 				}
 			}

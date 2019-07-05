@@ -1,0 +1,69 @@
+@import "../../styles/index";
+
+.dashboard-post__component {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	.post__description {
+
+		@include container;
+
+		width: 100%;
+		color: white;
+		letter-spacing: .2em;
+		line-height: 1.8rem;
+		font-weight: 100;
+		padding: 10px 15px;
+		box-sizing: border-box;
+		position: relative;
+		text-align: center;
+		margin: 10px auto 20px auto;
+
+		@include small-up {
+			font-size: .8rem;
+		}
+
+		@include small-medium-up {
+			font-size: .9rem;
+		}
+
+		@include media(small-to-big-screen) {
+			font-size: .9rem;
+		}
+
+		.post__author {
+			position: absolute;
+			right: 10px;
+			bottom: -5px;
+			font-size: .7em;
+		}
+
+		.post__edges {
+			position: absolute;
+			width: 20px;
+			height: 20px;
+			
+			border-style: solid;
+			border-color: rgba($nord6, .4);
+
+			&.post__edges--left {
+				left: 5px;
+				bottom: 5px;
+				border-width: 0 0 1px 1px;
+				border-radius: 0 0 0 4px;
+			}
+			&.post__edges--right {
+				right: 5px;
+				top: 5px;
+				border-width: 1px 1px 0 0;
+				border-radius: 0 4px 0 0;
+			}
+		}
+	}
+	.post__photos-container {
+		display: block;
+		width: 100%;
+	}
+}

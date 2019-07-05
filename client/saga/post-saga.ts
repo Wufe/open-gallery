@@ -38,6 +38,7 @@ function *uploadPost(action: AnyAction) {
 		yield put(openModal('uploading-modal'))
 		const post = yield call(requestPostUpload, action.payload);
 		yield put({ type: UPLOAD_POST_SUCCEEDED_ACTION, payload: post });
+		document.location.href = '/';
 	} catch (e) {
 		yield put({ type: UPLOAD_POST_FAILED_ACTION, payload: e && e.toString() })
 	} finally {

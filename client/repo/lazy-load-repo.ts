@@ -14,7 +14,7 @@ export class LazyLoadRepo {
 
 	constructor() {
 		this._observer = new IntersectionObserver(this._onIntersection, {
-			threshold: [.1],
+			threshold: 0,
 			trackVisibility: true,
 			delay: 100
 		} as IntersectionObserverInitV2);

@@ -8,7 +8,7 @@ type Props = {
 export class Header extends React.Component<Props> {
 
 	static defaultProps: Props = {
-		title: 'Photo gallery'
+		title: ''
 	}
 
 	render = () =>

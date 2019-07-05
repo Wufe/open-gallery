@@ -1,0 +1,65 @@
+@import "../../styles/index";
+
+.navigation__component {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 55px;
+	background: #444;
+	box-shadow: 0 0 5px rgba(black, .2), inset 0 1px 0 rgba(white, .1);
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0 30px;
+	color: white;
+
+	.navigation__content {
+		@include container;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		
+
+		.navigation__link {
+			display: flex;
+			align-items: center;
+			cursor: pointer;
+
+			.navigation__link-icon {
+				width: 26px;
+				height: 26px;
+				transition-property: fill;
+				transition-timing-function: linear;
+				transition-duration: .2s;
+
+				svg {
+					fill: white;					
+				}
+			}
+
+			.navigation__link-name {
+				padding: 0 20px;
+				font-weight: 100;
+
+				display: none;
+
+				@include medium-up {
+					display: block;
+				}
+			}
+
+			&:hover {
+				.navigation__link-name {
+					color: $nord9;
+					text-decoration: underline;
+				}
+				svg {
+					fill: $nord9;
+				}
+			}
+		}
+	}
+}
