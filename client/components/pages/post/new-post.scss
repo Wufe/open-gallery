@@ -90,7 +90,9 @@
 				color: $nord1;
 			}
 			&.action--upload {
-				background-color: $nord14;
+				$color: #2db93d;
+				background-color: $color;
+				text-shadow: 0 0 2px rgba(black, .4);
 			}
 
 			&:hover {
