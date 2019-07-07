@@ -12,21 +12,40 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	padding: 0 30px;
+	
 	color: white;
 
 	.navigation__content {
-		@include container;
+
+		// @include container;
+		@include medium-up {
+			max-width: 740px;
+		}
+		@include media(medium-to-large) {
+			max-width: 970px;
+		}
+		@include large-up {
+			max-width: 1280px;
+		}
+		
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		width: 100%;
-		
+		height: 100%;
+
+		> * {
+			flex-grow: 1;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
 
 		.navigation__link {
 			display: flex;
 			align-items: center;
 			cursor: pointer;
+			height: 100%;
 
 			.navigation__link-icon {
 				width: 26px;
@@ -58,6 +77,25 @@
 				}
 				svg {
 					fill: $nord9;
+				}
+			}
+
+			&--textual {
+				$color: #2db93d;
+				background-color: $color;
+				box-shadow: inset 1px 0 0 rgba(white, .2), inset 0 1px 0 rgba(white, .2), inset -1px 0 0 rgba(white, .2), inset 0 -1px 0 rgba(white, .2);
+				color: white;
+				text-shadow: 0 0 2px rgba(black, .4);
+				border-radius: 3px;
+
+				&:hover {
+					background-color: darken($color, 5%);
+					box-shadow: 0 0 5px rgba(black, .2);
+				}
+
+				&:active {
+					background-color: darken($color, 5%);
+					box-shadow: inset 0 0 5px rgba(black, .4);
 				}
 			}
 		}

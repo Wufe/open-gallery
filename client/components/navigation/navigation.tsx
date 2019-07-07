@@ -20,11 +20,12 @@ export default class Navigation extends React.Component {
 						</div>
 						<div className="navigation__link-name">Home</div>
 					</div>
-					<div className="navigation__link" onClick={() => this.go('/post/new')}>
-						<div className="navigation__link-icon">
+					<div className="navigation__link navigation__link--textual" onClick={() => this.go('/post/new')}>
+						Carica
+						{/* <div className="navigation__link-icon">
 							<AddIcon />
-						</div>
-						<div className="navigation__link-name">Scrivi post</div>
+						</div> */}
+						{/* <div className="navigation__link-name">Scrivi post</div> */}
 					</div>
 				</div>
 			</div>
