@@ -1,0 +1,13 @@
+.lazy__container {
+	background-color: #434343;
+	overflow: hidden;
+	overflow: hidden;
+	position: relative;
+
+	&.lazy__container--selectable {
+		&:hover {
+			cursor: pointer;
+			outline: 1px solid #06BEFA;
+		}
+	}
+}

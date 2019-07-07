@@ -7,80 +7,73 @@ export const IOCSymbols = {
 	ADMIN_PASSWORD: Symbol('admin_password'),
 	UPLOAD_DIR: Symbol('upload_dir'),
 	PUBLIC_UPLOAD_URL: Symbol('public_upload_url'),
+	MYSQL_HOST: Symbol('mysql_host'),
+	MYSQL_PORT: Symbol('mysql_port'),
+	MYSQL_USER: Symbol('mysql_user'),
+	MYSQL_PASS: Symbol('mysql_pass'),
 }
+
+type RequiredEnvironmentVariables = {
+	key: keyof typeof IOCSymbols;
+	default: string;
+}[];
 
 export const initIOCContainer = async (): Promise<void> => {
 	const isProd = process.env.NODE_ENV !== 'development';
 
-	let JWT_SECRET = process.env.JWT_SECRET;
-	if (!JWT_SECRET) {
-		if (isProd) {
-			console.error('Environment variable `JWT_SECRET` not set.');
-			console.error('Halting.');
-			process.exit(1);
-		} else {
-			console.log('Environment variable `JWT_SECRET` not set.');
-			console.log('Using `dev_jwt`.');
-			JWT_SECRET = 'dev_jwt';
-		}
-	}
+	const required : RequiredEnvironmentVariables = [
+		{
+			key: 'JWT_SECRET',
+			default: 'dev_jwt',
+		},
+		{
+			key: 'ADMIN_EMAIL',
+			default: 'admin@gallery.com',
+		},
+		{
+			key: 'ADMIN_PASSWORD',
+			default: 'ciccio',
+		},
+		{
+			key: 'UPLOAD_DIR',
+			default: 'public/uploads',
+		},
+		{
+			key: 'PUBLIC_UPLOAD_URL',
+			default: '/uploads',
+		},,
+		{
+			key: 'MYSQL_HOST',
+			default: '127.0.0.1',
+		},
+		{
+			key: 'MYSQL_PORT',
+			default: '3307',
+		},
+		{
+			key: 'MYSQL_USER',
+			default: 'root',
+		},
+		{
+			key: 'MYSQL_PASS',
+			default: 'toor',
+		},
+	]
 
-	let ADMIN_EMAIL = process.env.ADMIN_EMAIL;
-	if (!ADMIN_EMAIL) {
-		if (isProd) {
-			console.error('Environment variable `ADMIN_EMAIL` not set.');
-			console.error('Halting.');
-			process.exit(1);
-		} else {
-			console.log('Environment variable `ADMIN_EMAIL` not set.');
-			console.log('Using `admin@gallery.com`.');
-			ADMIN_EMAIL = 'admin@gallery.com';
+	required.forEach(required => {
+		let environmentVariable = process.env[required.key];
+		if (!environmentVariable) {
+			if (isProd) {
+				console.error(`Environment variable \`${required.key}\` not set.`);
+				console.error('Halting.');
+				process.exit(1);
+			} else {
+				console.log(`Environment variable \`${required.key}\` not set.`);
+				console.log(`Using \`${required.default}\`.`);
+				environmentVariable = required.default;
+			}
 		}
-	}
-
-	let ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
-	if (!ADMIN_PASSWORD) {
-		if (isProd) {
-			console.error('Environment variable `ADMIN_PASSWORD` not set.');
-			console.error('Halting.');
-			process.exit(1);
-		} else {
-			console.log('Environment variable `ADMIN_PASSWORD` not set.');
-			console.log('Using `ciccio`.');
-			ADMIN_PASSWORD = 'ciccio';
-		}
-	}
-
-	let UPLOAD_DIR = process.env.UPLOAD_DIR;
-	if (!UPLOAD_DIR) {
-		if (isProd) {
-			console.error('Environment variable `UPLOAD_DIR` not set.');
-			console.error('Halting.');
-			process.exit(1);
-		} else {
-			console.log('Environment variable `UPLOAD_DIR` not set.');
-			console.log('Using `public/uploads`.');
-			UPLOAD_DIR = 'public/uploads';
-		}
-	}
-
-	let PUBLIC_UPLOAD_URL = process.env.PUBLIC_UPLOAD_URL;
-	if (!PUBLIC_UPLOAD_URL) {
-		if (isProd) {
-			console.error('Environment variable `PUBLIC_UPLOAD_URL` not set.');
-			console.error('Halting.');
-			process.exit(1);
-		} else {
-			console.log('Environment variable `PUBLIC_UPLOAD_URL` not set.');
-			console.log('Using `/uploads/`.');
-			PUBLIC_UPLOAD_URL = '/uploads';
-		}
-	}
-
-	container.registerInstance(IOCSymbols.JWT_SECRET, JWT_SECRET);
-	container.registerInstance(IOCSymbols.ADMIN_EMAIL, ADMIN_EMAIL);
-	container.registerInstance(IOCSymbols.ADMIN_PASSWORD, ADMIN_PASSWORD);
-	container.registerInstance(IOCSymbols.UPLOAD_DIR, UPLOAD_DIR);
-	container.registerInstance(IOCSymbols.PUBLIC_UPLOAD_URL, PUBLIC_UPLOAD_URL);
+		container.registerInstance(IOCSymbols[required.key], environmentVariable);
+	});
 	
 }

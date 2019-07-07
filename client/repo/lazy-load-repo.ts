@@ -1,4 +1,4 @@
-import { LazyLoadImageContainer, LazyLoadObject } from "../components/lazy-load/lazy-load-image-container";
+import { LazyLoadObject } from "@/client/components/lazy-load/lazy-load-image";
 
 type IntersectionObserverEntryV2 = IntersectionObserverEntry & {
 	isVisible: boolean;
@@ -26,8 +26,7 @@ export class LazyLoadRepo {
 			if (typeof change.isVisible === 'undefined') {
 				change.isVisible = true;
 			}
-			if (change.isIntersecting && change.isVisible) {
-				// const target = change.target;
+			if (change.isIntersecting/* && change.isVisible*/) {
 				const targetIndex = this._images
 					.findIndex(x => x.element === change.target);
 				if (targetIndex === -1)

@@ -4,7 +4,7 @@ import { UserEntity } from "./user-entity";
 import { AlbumModel } from "@/domain/models/album";
 import { PhotoEntity } from "./photo-entity";
 
-@Entity()
+@Entity("album")
 @mapTo(AlbumModel)
 export class AlbumEntity extends BaseEntity {
 

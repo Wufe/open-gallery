@@ -1,8 +1,5 @@
 import * as React from 'react';
 import loadable, { LoadableLibrary } from '@loadable/component';
-import { LazyLoadImageContainer, CustomPhotoProps } from '../lazy-load/lazy-load-image-container';
-import { LazyLoadRepo } from '@/client/repo/lazy-load-repo';
-import { LazyLoadImage } from '../lazy-load/lazy-load-image';
 import { PhotoProps } from 'react-photo-gallery';
 import { MapStateToProps, connect, MapDispatchToProps } from 'react-redux';
 import { PhotoModuleOwnState } from '@/client/redux/state/photo-state';
@@ -10,6 +7,7 @@ import Gallery from 'react-photo-gallery';
 import { requestPhotoFetch } from '@/client/redux/action/photo-action';
 import { Header } from '../header/header';
 import { SubHeader } from '../header/sub-header';
+import { CustomPhotoProps, PhotoGalleryImage } from './photo-gallery-image';
 
 type OwnProps = {};
 
@@ -74,7 +72,7 @@ const PhotoGalleryInner = connect(mapStateToProps, mapDispatchToProps)(class ext
 					{this.props.photos && this.props.photos.length > 0 && <Gallery
 						direction={"column"}
 						photos={this.props.photos.map(x => ({...x, lazy: instance }))}
-						renderImage={LazyLoadImage} />}
+						renderImage={PhotoGalleryImage} />}
 					{(!this.props.photos || !this.props.photos.length) && <SubHeader title={"Non ci sono foto"} />}
 					</>;
 			}}

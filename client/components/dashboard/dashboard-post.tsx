@@ -2,8 +2,10 @@ import * as React from 'react';
 import { PostModel } from '@/domain/models/post';
 import { LazyLoadRepo } from '@/client/repo/lazy-load-repo';
 import Gallery from 'react-photo-gallery';
-import { LazyLoadImage } from '../lazy-load/lazy-load-image';
 import './dashboard-post.scss';
+import { PhotoGalleryImage, PhotoGalleryImageContainer } from '../gallery/photo-gallery-image';
+import { LazyLoadImage } from '../lazy-load/lazy-load-image';
+import { PhotoGalleryStaticImage } from '../gallery/photo-gallery-static-image';
 
 type Props = {
 	post: PostModel;
@@ -11,6 +13,7 @@ type Props = {
 }
 
 export default class DashboardPost extends React.Component<Props> {
+
 	render() {
 		return <>
 			<div className="dashboard-post__component">
@@ -24,12 +27,19 @@ export default class DashboardPost extends React.Component<Props> {
 					</div>}
 				{this.props.post.photos &&
 					this.props.post.photos.length > 0 &&
-					<div className="post__photos-container">
-						<Gallery
-							direction="column"
-							renderImage={LazyLoadImage}
-							photos={this.props.post.photos.map(x => ({ ...x, lazy: this.props.lazyLoadRepo }))} />
-				</div>}
+					<>
+						{this.props.post.photos.length <= 3 && <div className="post__static-photos-container">
+							{this.props.post.photos.map((photo, index) =>
+								<PhotoGalleryStaticImage lazy={this.props.lazyLoadRepo} photo={photo} key={index} />)}
+						</div>}
+						{this.props.post.photos.length > 3 &&
+							<div className="post__photos-container">
+								<Gallery
+									direction="column"
+									renderImage={PhotoGalleryImageContainer}
+									photos={this.props.post.photos.map(x => ({ ...x, lazy: this.props.lazyLoadRepo }))} />
+							</div>}
+					</>}
 			</div>
 		</>
 	}

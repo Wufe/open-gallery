@@ -70,7 +70,7 @@ class TemplateRenderer {
 const isProd = process.env.NODE_ENV !== 'development';
 console.log(`Backend server environment: ${isProd ? 'production' : 'development'}`);
 
-const loggerInstance = Logger(isProd ? 'tiny' : 'dev');
+const loggerInstance = Logger(isProd ? 'short' : 'dev');
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -84,8 +84,8 @@ export const initBackEndApp = async () => {
 	router.use(bodyParser.urlencoded({ extended: false, limit: '200mb', type: 'application/json' }));
 	router.use(loggerInstance);
 
-	const nodeStats = resolve(__dirname, './node-stats.json');
-	const webStats = resolve(__dirname, './web-stats.json');
+	const nodeStats = resolve(process.cwd(), 'dist', './node-stats.json');
+	const webStats = resolve(process.cwd(), 'dist', './web-stats.json');
 
 	const generateSSRPayload = ({ location, context }: {
 		location: string;

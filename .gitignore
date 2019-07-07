@@ -505,3 +505,7 @@ dist/*
 !dist/.gitignore
 uploads
 public/uploads
+tmp
+
+# Production artefacts
+docker-compose.production.yml

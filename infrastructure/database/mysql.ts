@@ -8,6 +8,7 @@ import { PhotoFormatEntity } from "@/data/entities/photo-format-entity";
 import { PostEntity } from "@/data/entities/post-entity";
 import { UserEntity } from "@/data/entities/user-entity";
 import { AlbumEntity } from "@/data/entities/album-entity";
+import { IOCSymbols } from "../ioc";
 
 const isProd = process.env.NODE_ENV !== 'development';
 
@@ -15,10 +16,10 @@ export class MysqlDatabaseBuilder implements IDatabaseBuilder {
 	initConnection = (): Promise<Connection> => {
 		const connection = createConnection({
 			type: 'mysql',
-			username: 'root',
-			password: 'toor',
-			host: '127.0.0.1',
-			port: 3307,
+			username: container.resolve(IOCSymbols.MYSQL_USER) as string,
+			password: container.resolve(IOCSymbols.MYSQL_PASS) as string,
+			host: container.resolve(IOCSymbols.MYSQL_HOST) as string,
+			port: +(container.resolve(IOCSymbols.MYSQL_PORT) as string),
 			database: 'gallery',
 			entities: [
 				AlbumEntity,
@@ -27,12 +28,17 @@ export class MysqlDatabaseBuilder implements IDatabaseBuilder {
 				PhotoFormatEntity,
 				UserEntity
 			],
-			synchronize: !isProd,
+			synchronize: true,
 			logger: "simple-console",
 			logging: ["error"]
 		});
 		 
 		connection.then(connectionInstance => container.registerInstance(Connection, connectionInstance));
+		connection.catch(err => {
+			console.error(err);
+			console.log('Halting.');
+			process.exit(1);
+		})
 		return connection;
 	}
 }

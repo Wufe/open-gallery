@@ -7,7 +7,7 @@ import { UserEntity } from "./user-entity";
 import { AlbumEntity } from "./album-entity";
 import uuid from 'uuid/v1';
 
-@Entity()
+@Entity("photo")
 @mapTo(PhotoModel)
 export class PhotoEntity extends BaseEntity {
 	@PrimaryGeneratedColumn()

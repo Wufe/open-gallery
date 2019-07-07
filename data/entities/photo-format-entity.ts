@@ -4,7 +4,7 @@ import { mapTo } from "@wufe/mapper";
 import { PhotoFormatModel } from "@/domain/models/photo-format";
 import { PhotoFormat } from "../enums/photo-enums";
 
-@Entity()
+@Entity("photo_format")
 @mapTo(PhotoFormatModel)
 export class PhotoFormatEntity extends BaseEntity {
 	@PrimaryGeneratedColumn()

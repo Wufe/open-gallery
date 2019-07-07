@@ -9,7 +9,6 @@ import { ApplicationModuleOwnState } from '@/client/redux/state/application-stat
 import loadable from '@loadable/component';
 
 import './dashboard.scss';
-import { LazyLoadImage } from '../lazy-load/lazy-load-image';
 import DashboardPost from './dashboard-post';
 
 type OwnProps = {}

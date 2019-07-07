@@ -7,7 +7,7 @@ import { AlbumEntity } from "./album-entity";
 import { UserRole } from "../enums/user-enums";
 import { PostEntity } from "./post-entity";
 
-@Entity()
+@Entity("user")
 @mapTo(UserModel, true)
 export class UserEntity extends BaseEntity {
 	@PrimaryGeneratedColumn()

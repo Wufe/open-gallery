@@ -43,7 +43,7 @@ export const Layout = connect(mapStateToProps, mapDispatchToProps)(class extends
 	}
 
 	onBackdropClick = (event: React.MouseEvent) => {
-		this.props.close();
+		// this.props.close();
 	}
 
 	render = () =>

@@ -5,7 +5,7 @@ import { PostModel } from "@/domain/models/post";
 import uuid from 'uuid/v1';
 import { UserEntity } from "./user-entity";
 
-@Entity()
+@Entity("post")
 @mapTo(PostModel, true)
 export class PostEntity extends BaseEntity {
 	@PrimaryGeneratedColumn()
@@ -14,7 +14,7 @@ export class PostEntity extends BaseEntity {
 	@Column()
 	uuid: string;
 
-	@Column()
+	@Column({ type: 'text' })
 	description: string;
 
 	@OneToMany(type => PhotoEntity, photo => photo.post)

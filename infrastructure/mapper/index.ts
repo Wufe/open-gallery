@@ -12,6 +12,9 @@ import { AlbumEntity } from "@/data/entities/album-entity";
 import { AlbumModel } from "@/domain/models/album";
 import { IOCSymbols } from "../ioc";
 import { join } from 'path';
+import { PhotoFormat } from "@/data/enums/photo-enums";
+import { PhotoFormatModel } from "@/domain/models/photo-format";
+import { PhotoFormatEntity } from "@/data/entities/photo-format-entity";
 
 export const initMapper = (): Mapper => {
 
@@ -33,6 +36,12 @@ export const initMapper = (): Mapper => {
 							acc[format.type] = mapper.map(format);
 							return acc;
 						}, {}) : {}) as PhotoFormatsDictionary));
+
+	mapper.createMap<PhotoFormatEntity, PhotoFormatModel>(PhotoFormatEntity)
+		.withConfiguration(conf => conf.shouldRequireExplicitlySetProperties(true))
+		.forMember('height', opt => opt.mapFrom(src => src.height))
+		.forMember('width', opt => opt.mapFrom(src => src.width))
+		.forMember('src', opt => opt.mapFrom(src => join(publicUrl, src.src)));
 
 	mapper
 		.createMap<PostEntity, PostModel>(PostEntity)
