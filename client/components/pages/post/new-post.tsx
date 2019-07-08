@@ -14,6 +14,8 @@ import { ApplicationModuleOwnState } from '@/client/redux/state/application-stat
 import { PostInputModel } from '@/client/saga/post-saga';
 import { IdentityModuleOwnState } from '@/client/redux/state/identity-state';
 import { SAVE_USER_ACTION } from '@/client/redux/action/identity-action';
+import { withRouter, RouteComponentProps } from 'react-router';
+import { PhotoIcon } from '../../icons/photo-icon';
 
 type OwnProps = {}
 
@@ -28,10 +30,10 @@ type DispatchProps = {
 	saveUser: (username: string) => void;
 }
 
-type Props = OwnProps & StateProps & DispatchProps;
+type Props = OwnProps & StateProps & DispatchProps & RouteComponentProps;
 
 type State = {
-	photosToBeUploaded: File[];
+	photosToBeUploaded: ExtendedFile[];
 	anonym: boolean;
 	username: string;
 	description: string;
@@ -50,7 +52,11 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = dispatch
 	saveUser: username => dispatch({ type: SAVE_USER_ACTION, payload: username })
 });
 
-const NewPostInternal = connect(mapStateToProps, mapDispatchToProps)(class extends React.Component<Props, State> {
+type ExtendedFile = File & {
+	preview?: string;
+}
+
+const NewPostInternal = withRouter(connect(mapStateToProps, mapDispatchToProps)(class extends React.Component<Props, State> {
 
 	formRef: React.RefObject<HTMLFormElement> = React.createRef();
 	usernameRef: React.RefObject<HTMLInputElement> = React.createRef();
@@ -114,69 +120,80 @@ const NewPostInternal = connect(mapStateToProps, mapDispatchToProps)(class exten
 		this.setState({ description: (event.target as HTMLTextAreaElement).value })
 	}
 
-	render() {
-		return <div className="new-post__component">
-			<SubHeader title="Nuovo post" />
-			<form className="new-post__form" ref={this.formRef}>
-				<div className={`form__content ${this.props.loading ? 'form__content--loading' : ''}`}>
-					<div className="form__row">
-						<div className="form-field__description">
-							<span>Username</span>
-							<label>
-								<input type="checkbox" onChange={this.onAnonymChange} checked={this.state.anonym} />
-								<span>Anonimo</span>
-							</label>
-						</div>
-						<div className="form-field__input">
-							<input className={`${this.state.usernameWarning ? 'warning' : ''}`} ref={this.usernameRef} type="text" value={this.state.username} placeholder="Inserisci il tuo nome" disabled={this.state.anonym} onChange={this.onUsernameChange} />
-							
-						</div>
-						{this.state.usernameWarning && <div className="form-row__warning">Inserisci il tuo nome</div>}
-					</div>
-					<div className="form__row">
-						<div className="form-field__description">Testo</div>
-						<div className="form-field__input">
-							<textarea onChange={this.onDescriptionChange} value={this.state.description} rows={10} style={{width: '100%'}} />
-						</div>
-					</div>
-					{this.state.photosToBeUploaded.length > 0 &&
-						<>
-							<div className="form__row">
-								<div className="form-field__description form-field__description--big">File pronti al caricamento</div>
-							</div>
-							{this.state.photosToBeUploaded.map((file, k) =>
-								<div className="files-list__list-item" key={k}>
-									<div className="file__name">{file.name}</div>
-								</div>)}
-							<div className="files-list__action-container">
-								<button className="action--undo" onClick={this.resetForm}>Annulla</button>
-								<button className="action--upload" onClick={this.upload}>Carica</button>
-							</div>
-						</>}
-				</div>
-				{/* {this.props.loading && <div className="form-loading__span">Caricamento in corso</div>} */}
-			</form>
-			
-			{!this.props.loading && <Dropzone accept={'image/jpeg, image/png'} onDrop={acceptedFiles => {
+	onDrop = (files: File[]) => {
+		const readerPromises = files
+			.map((file: ExtendedFile) => {
+				return new Promise<ExtendedFile>(resolve => {
+					const reader = new FileReader();
+
+					reader.onabort = () => resolve(file)
+					reader.onerror = () => resolve(file)
+					reader.onload = () => {
+						const binaryStr = reader.result;
+						file.preview = binaryStr.toString();
+						resolve(file)
+					}
+					reader.readAsDataURL(file);
+				});
+			});
+		Promise.all(readerPromises)
+			.then(extendedFiles => {
 				this.setState({
 					photosToBeUploaded: [
 						...this.state.photosToBeUploaded,
-						...acceptedFiles
-					]
+						...extendedFiles
+					] 
 				})
-			}}>
+			})
+	}
+
+	render() {
+		const photos = this.state.photosToBeUploaded;
+		return <div className="new-post__component">
+			<div className="new-post__header">Nuovo post</div>
+			<form className="new-post__form" ref={this.formRef}>
+				<div className="form__row">
+					<div className={`form-field__input ${this.state.usernameWarning ? 'warning' : ''}`}>
+						<input className={`form-field__username`} ref={this.usernameRef} type="text" value={this.state.username} placeholder="Inserisci il tuo nome" disabled={this.state.anonym} onChange={this.onUsernameChange} />
+					</div>
+					{this.state.usernameWarning && <div className="form-row__warning">Inserisci il tuo nome</div>}
+				</div>
+				<div className="form__row">
+					<div className="form-field__input">
+						<textarea
+							onChange={this.onDescriptionChange}
+							value={this.state.description}
+							rows={5}
+							placeholder="Aggiungi un commento..." />
+					</div>
+				</div>
+			</form>
+			{photos.length > 0 && <div className="form-action__container">
+				<button className="form-action form-action__primary" onClick={this.upload}>Pubblica</button>
+			</div>}
+			{!this.props.loading && <Dropzone accept={'image/jpeg, image/png'} onDrop={this.onDrop}>
 				{({getRootProps, getInputProps}) => (
-					<section className="drop-zone__section">
-						<div className="drop-zone__input-container" {...getRootProps()}>
+					<section className={`drop-zone__section ${photos.length ? 'drop-zone__section--small drop-zone__section--bordered' : ''}`} {...getRootProps()}>
+						<div className={`drop-zone__input-container ${photos.length ? 'drop-zone__input-container--small' : ''}`} >
 							<input {...getInputProps()} />
-							<p>Trascina i file o clicca per selezionare</p>
+							<PhotoIcon />
+							{photos.length > 0 && <p>Aggiungi altre foto</p>}
+							{photos.length === 0 && <p>Clicca per aggiungere foto</p>}
 						</div>
 					</section>
 				)}
 			</Dropzone>}
+			{photos.length >  0 && <div className="form-action__container">
+				<button className="form-action form-action__cancel" onClick={this.resetForm}>Annulla</button>
+			</div>}
+			{photos.length > 0 && <div className={`new-post__files ${photos.length === 1 ? 'new-post__files--single' : ''}`}>
+				{photos.map((photo, index) => <div className="new-post__file" key={index}>
+					<img src={photo.preview} alt={photo.name} />
+				</div>)}
+			</div>}
 		</div>
 	}
-})
+}));
 
 const NewPost = () => <DynamicModuleLoader modules={[getPostModule()]}>
 	<NewPostInternal />

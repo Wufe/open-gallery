@@ -17,14 +17,17 @@ export default class DashboardPost extends React.Component<Props> {
 	render() {
 		return <>
 			<div className="dashboard-post__component">
-				{this.props.post.description &&
-					this.props.post.description.trim() &&
+				{(this.props.post.description && this.props.post.description.trim()) ?
 					<div className="post__description">
 						<div className="post__edges post__edges--left" />
 						<div className="post__edges post__edges--right" />
 						<div className="post__author">~ {this.props.post.creator}</div>
 						{this.props.post.description}
+					</div> :
+					<div className="post__description post__description--empty">
+						<div className="post__author">~ {this.props.post.creator}</div>
 					</div>}
+				
 				{this.props.post.photos &&
 					this.props.post.photos.length > 0 &&
 					<>

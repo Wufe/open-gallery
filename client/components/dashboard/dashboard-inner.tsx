@@ -97,7 +97,10 @@ const DashboardInner = connect(mapStateToProps, mapDispatchToProps)(class extend
 					const instance = lazy.buildLazy();
 					return <>
 						{this.props.posts && this.props.posts.length > 0 && <div className="posts">
-							{this.props.posts.map((post, index) => <DashboardPost key={index} post={post} lazyLoadRepo={instance} />)}
+							{this.props.posts.map((post, index) => <React.Fragment key={index}>
+								<DashboardPost key={index} post={post} lazyLoadRepo={instance} />
+								{index < this.props.posts.length -1 && <div className="post__separator"></div>}
+							</React.Fragment>)}
 						</div>}
 						{(!this.props.posts || !this.props.posts.length) && !this.props.loading && <SubHeader title="Attualmente non ci sono post da mostrare." />}
 					</>;

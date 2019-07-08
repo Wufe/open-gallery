@@ -2,7 +2,7 @@ import * as React from 'react';
 import './navigation.scss';
 import { HomeIcon } from '../icons/home-icon';
 import { AddIcon } from '../icons/add-icon';
-import { Link } from 'react-router-dom';
+import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import { MapStateToProps, connect } from 'react-redux';
 import { IdentityModuleOwnState } from '@/client/redux/state/identity-state';
 import { SelectionIcon } from '../icons/selection-icon';
@@ -17,15 +17,19 @@ const mapStateToProps: MapStateToProps<StateProps, OwnProps, IdentityModuleOwnSt
 	isAdmin: state.identity.isAdmin,
 });
 
-type Props = OwnProps & StateProps;
+type Props = OwnProps & StateProps & RouteComponentProps
 
-const Navigation = connect(mapStateToProps)(class extends React.Component<Props> {
+const Navigation = withRouter(connect(mapStateToProps)(class extends React.Component<Props> {
 
 	go(location: string) {
 		document.location.href = location;
 	}
 
 	render() {
+
+		const uploadButtonClass = this.props.location.pathname === '/post/new' ?
+			'navigation__link--hidden' : '';
+
 		return <>
 			<div className="navigation__component">
 				<div className="navigation__content">
@@ -42,17 +46,16 @@ const Navigation = connect(mapStateToProps)(class extends React.Component<Props>
 						</div>
 						<div className="navigation__link-name">Seleziona</div>
 					</div>
-					<div className="navigation__link navigation__link--textual navigation__link--primary" key="upload" onClick={() => this.go('/post/new')}>
+					<div
+						className={`navigation__link navigation__link--textual navigation__link--primary ${uploadButtonClass}`}
+						key="upload"
+						onClick={() => this.go('/post/new')}>
 						Carica
-						{/* <div className="navigation__link-icon">
-							<AddIcon />
-						</div> */}
-						{/* <div className="navigation__link-name">Scrivi post</div> */}
 					</div>
 				</div>
 			</div>
 		</>;
 	}
-})
+}));
 
 export default Navigation;
