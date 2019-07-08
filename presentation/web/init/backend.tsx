@@ -59,7 +59,7 @@ class TemplateRenderer {
 	renderTemplate = (template: string, payload: ServerEntryPayload) =>
 		this.templates[template]
 			.content
-			.replace(`{{title}}`, 'Open gallery')
+			.replace(`{{title}}`, 'Elisa e Vito')
 			.replace(`{{html}}`, payload.html)
 			.replace(`{{links}}`, payload.assets.links)
 			.replace(`{{styles}}`, payload.assets.styles)
@@ -124,7 +124,7 @@ export const initBackEndApp = async () => {
 	AuthenticationController.register(router);
 	PostController.register(router);
 
-	router.get(["/", "/post/:id", "/album/:id", "/user/:id", "/about"], (req, res) => {
+	router.get(["/", "/post/:id", "/album/:id", "/user/:id", "/login"], (req, res) => {
 		// const param = req.params.id;
 		const context = {};
 		const payload = generateSSRPayload({

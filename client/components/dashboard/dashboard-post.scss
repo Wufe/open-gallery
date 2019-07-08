@@ -1,5 +1,7 @@
 @import "../../styles/index";
 
+
+
 .dashboard-post__component {
 	width: 100%;
 	display: flex;
@@ -11,10 +13,9 @@
 		@include container;
 
 		width: 100%;
-		color: white;
 		letter-spacing: .2em;
 		line-height: 1.8rem;
-		font-weight: 100;
+		font-weight: 200;
 		padding: 10px 15px;
 		box-sizing: border-box;
 		position: relative;
@@ -46,7 +47,7 @@
 			height: 20px;
 			
 			border-style: solid;
-			border-color: rgba($nord6, .4);
+			
 
 			&.post__edges--left {
 				left: 5px;
@@ -65,5 +66,27 @@
 	.post__photos-container {
 		display: block;
 		width: 100%;
+	}
+}
+
+html[theme=dark] {
+	.dashboard-post__component {
+		.post__description {
+			color: #FAFAFA;
+			.post__edges {
+				border-color: rgba($nord6, .4);
+			}
+		}
+	}
+}
+
+html[theme=light] {
+	.dashboard-post__component {
+		.post__description {
+			color: #333;
+			.post__edges {
+				border-color: rgba(#333, .4);
+			}
+		}
 	}
 }

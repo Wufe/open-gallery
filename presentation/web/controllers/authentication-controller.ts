@@ -57,7 +57,7 @@ export class AuthenticationController extends Controller {
 		handler: controller => (req, res) => {
 			Passport.authenticate('local', { session: false }, (err, user: UserModel, info) => {
 				if (err || !user) {
-					return res.status(400).json({
+					return res.status(401).json({
 						message: 'Authentication error',
 						error: err && err.toString(),
 						info
@@ -71,7 +71,38 @@ export class AuthenticationController extends Controller {
 							if (user && user.role === UserRole.ADMIN) {
 								const userModel: UserModel = {...this._mapper.map(user)};
 								const token = JWT.sign(userModel, this._jwtSecret);
-								return res.json({ userModel, token });
+								return res.json({ user: userModel, token });
+							} else {
+								res.sendStatus(403);
+							}
+						});
+					
+				});
+			})(req, res);
+		}
+	}
+
+	auth: ControllerAction<AuthenticationController> = {
+		method: 'post',
+		path: '/login',
+		handler: controller => (req, res) => {
+			Passport.authenticate('local', { session: false }, (err, user: UserModel, info) => {
+				if (err || !user) {
+					return res.status(400).json({
+						message: 'Authentication error',
+						error: err && err.toString(),
+						info
+					});
+				}
+				req.login(user, { session: false }, err => {
+					if (err) return res.send(err);
+					if (!user.email) return res.send({ error: 'No email' });
+					UserEntity.findOne({ where: { email: user.email }})
+						.then(user => {
+							if (user) {
+								const userModel: UserModel = {...this._mapper.map(user)};
+								const token = JWT.sign(userModel, this._jwtSecret);
+								return res.json({ user: userModel, token });
 							} else {
 								res.sendStatus(403);
 							}

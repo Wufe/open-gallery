@@ -51,8 +51,6 @@ export class PostController extends Controller {
 				if (err) {
 					console.error(err);
 					process.exit(1);
-				} else {
-					console.warn(made);
 				}
 			});
 		}	
@@ -69,7 +67,6 @@ export class PostController extends Controller {
 				'user',
 				'photos.formats'
 			]});
-		// console.log(posts[0].uuid, posts[0].photos);
 		return posts;
 	}
 
@@ -91,12 +88,11 @@ export class PostController extends Controller {
 					posts = await this.getGenericPosts();
 				} else {
 					posts = await PostEntity.find({
-						where: { id: MoreThan(relativePost.id) },
-						order: { id: 'ASC' },
+						where: { id: LessThan(relativePost.id) },
+						order: { id: 'DESC' },
 						take: this.POSTS_LIMIT,
 						relations: [ 'photos', 'user', 'photos.formats' ]
 					});
-					posts = posts.sort((x, y) => y.id - x.id);
 				}
 			}
 
@@ -123,11 +119,12 @@ export class PostController extends Controller {
 					posts = await this.getGenericPosts();
 				} else {
 					posts = await PostEntity.find({
-						where: { id: LessThan(relativePost.id) },
-						order: { id: 'DESC' },
+						where: { id: MoreThan(relativePost.id) },
+						order: { id: 'ASC' },
 						take: this.POSTS_LIMIT,
 						relations: [ 'photos', 'user', 'photos.formats' ]
 					});
+					posts = posts.sort((x, y) => y.id - x.id);
 				}
 			}
 

@@ -4,10 +4,12 @@
 }
 .lazy__image {
 	opacity: 0;
+	visibility: hidden;
 	// -webkit-transition: .4s opacity ease-in;
 	// transition: .4s opacity ease-in;
 	// -webkit-transform: translateZ(0);
-	transition: transform .25s cubic-bezier(0.0,0.0,0.2,1),opacity linear .25s;
+	transition: transform .25s cubic-bezier(0.0,0.0,0.2,1), opacity .25s linear, visibility .25s linear;
+	-webkit-transition: transform .25s cubic-bezier(0.0,0.0,0.2,1), opacity .25s linear, visibility .25s linear;
 
 	&.lazy__image--orientation-3 {
 		transform: rotate(180deg);
@@ -23,6 +25,9 @@
 
 	&.lazy__image--visible {
 		opacity: 1;
+		visibility: visible;
+		transition: transform .25s cubic-bezier(0.0,0.0,0.2,1), opacity .25s linear, visibility .25s linear;
+		-webkit-transition: transform .25s cubic-bezier(0.0,0.0,0.2,1), opacity .25s linear, visibility .25s linear;
 		// animation: .4s fadeIn ease-in;
 	}
 

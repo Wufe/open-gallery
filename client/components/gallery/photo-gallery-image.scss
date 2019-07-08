@@ -1,8 +1,7 @@
 .lazy__container {
-	background-color: #434343;
-	overflow: hidden;
-	overflow: hidden;
 	position: relative;
+	padding: 10px;
+	box-sizing: border-box;
 
 	&.lazy__container--selectable {
 		&:hover {

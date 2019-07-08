@@ -8,7 +8,14 @@
 	.sub-header {
 		font-family: $font-family;
 		font-size: 1.4rem;
-		color: #FAFAFA;
 		font-weight: 100;
+	}
+}
+
+html[theme=dark] {
+	.sub-header__container {
+		.sub-header {
+			color: #FAFAFA;
+		}
 	}
 }

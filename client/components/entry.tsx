@@ -1,5 +1,5 @@
 import * as React from 'react';
-import "../styles/index.scss";
+import "./entry.scss";
 import { renderRoutes } from 'react-router-config';
 import { routes } from '../router/routes';
 import { Layout } from './layout/layout';

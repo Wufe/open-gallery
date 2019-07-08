@@ -70,6 +70,7 @@ const PhotoGalleryInner = connect(mapStateToProps, mapDispatchToProps)(class ext
 				const instance = lazy.buildLazy();
 				return <>
 					{this.props.photos && this.props.photos.length > 0 && <Gallery
+						margin={10}
 						direction={"column"}
 						photos={this.props.photos.map(x => ({...x, lazy: instance }))}
 						renderImage={PhotoGalleryImage} />}

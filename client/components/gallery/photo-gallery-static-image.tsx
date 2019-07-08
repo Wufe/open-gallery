@@ -40,7 +40,7 @@ export class PhotoGalleryStaticImage extends React.Component<Props> {
 						lazy={this.props.lazy}
 						useSelfRef={false}
 						src={format.src}
-						imgClass=""/>
+						imgClass="gallery-image"/>
 				</div>
 		</div>;
 	}

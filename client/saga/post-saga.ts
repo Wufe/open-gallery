@@ -1,6 +1,6 @@
 import { UPLOAD_POST_REQUESTED_ACTION, UPLOAD_POST_SUCCEEDED_ACTION, UPLOAD_POST_FAILED_ACTION, LOAD_POST_AFTER_ACTION, LOAD_POST_BEFORE_ACTION, LOADED_POST_BEFORE_ACTION, LOADED_POST_AFTER_ACTION } from "../redux/action/post-action";
 import { AnyAction } from "redux";
-import { put, call, takeLeading, all } from "redux-saga/effects";
+import { put, call, takeLeading, all, throttle } from "redux-saga/effects";
 import { setLoading } from "../redux/action/application-action";
 import Axios from "axios";
 import { openModal, closeModal } from "../redux/action/modal-action";
@@ -78,11 +78,11 @@ function *watchUploadPost() {
 }
 
 function *watchLoadPostAfter() {
-	yield takeLeading(LOAD_POST_AFTER_ACTION, loadPostAfter);
+	yield throttle(1000, LOAD_POST_AFTER_ACTION, loadPostAfter);
 }
 
 function *watchLoadPostBefore() {
-	yield takeLeading(LOAD_POST_BEFORE_ACTION, loadPostBefore);
+	yield throttle(1000, LOAD_POST_BEFORE_ACTION, loadPostBefore);
 }
 
 export function *postSaga() {

@@ -11,7 +11,7 @@ const App = (props: React.ClassAttributes<any> & { Entry: React.ComponentFactory
 		<Entry />
 	</BrowserRouter>;
 
-loadableReady(() => hydrate(<App Entry={Entry} />, element));
+loadableReady(() => render(<App Entry={Entry} />, element));
 
 if (module.hot) {
 	module.hot.accept('./components/entry', () => {

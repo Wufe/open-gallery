@@ -61,8 +61,8 @@ export const PhotoGalleryImage = connect(mapStateToProps, mapDispatchToProps)(cl
 		}
 
 		const imgStyle: React.CSSProperties = {
-			width: this.props.photo.width,
-			height: this.props.photo.height,
+			width: this.props.photo.width -20,
+			height: this.props.photo.height -20,
 		};
 		const scaleX = (100 - (30 / this.props.photo.width) * 100) / 100;
 		const scaleY = (100 - (30 / this.props.photo.height) * 100) / 100;
@@ -97,7 +97,7 @@ export const PhotoGalleryImage = connect(mapStateToProps, mapDispatchToProps)(cl
 				<LazyLoadImage
 					useSelfRef={false}
 					ref={this._lazyRef}
-					imgClass={this.props.photo.selected ? `lazy__image--selected` : ''}
+					imgClass={'gallery-image ' + (this.props.photo.selected ? `lazy__image--selected` : '')}
 					imgStyle={imgStyle}
 					intersectionElementRef={this._containerRef}
 					lazy={this.props.photo.lazy}

@@ -39,18 +39,43 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = dispatch
 	loadAfter: uuid => dispatch({ type: LOAD_POST_AFTER_ACTION, payload: uuid }),
 });
 
-const DashboardInner = connect(mapStateToProps, mapDispatchToProps)(class extends React.Component<Props> {
+type State = {
+	timer: any | null;
+}
+
+const POLLING_INTERVAL = 60000;
+
+const DashboardInner = connect(mapStateToProps, mapDispatchToProps)(class extends React.Component<Props, State> {
+
+	constructor(props: Props) {
+		super(props);
+		this.state = { timer: null };
+	}
 
 	componentWillMount() {
 		this.props.loadAfter('');
 	}
 
 	componentDidMount() {
-		window.addEventListener('scroll', this.onScroll)
+		window.addEventListener('scroll', this.onScroll);
+		if (!this.state.timer) {
+			this.setState({ timer: setInterval(this.checkNew, POLLING_INTERVAL) });
+		}
 	}
 
 	componentWillUnmount() {
 		window.removeEventListener('scroll', this.onScroll);
+		if (this.state.timer) {
+			clearInterval(this.state.timer);
+			this.setState({ timer: null });
+		}
+	}
+
+	checkNew = () => {
+		let firstUUID = '';
+		if (this.props.posts.length)
+			firstUUID = this.props.posts[0].uuid;
+		this.props.loadBefore(firstUUID);
 	}
 
 	onScroll = (event: Event) => {

@@ -8,9 +8,17 @@
 	padding: 15px 20px 0 15px;
 
 	.header {
-		font-family: $font-family;
-		font-size: 2.5rem;
-		color: #FAFAFA;
+		font-family: $cursive-font-family;
+		font-size: 2.6rem;
+		
 		font-weight: 100;
+	}
+}
+
+html[theme=dark] {
+	.header__container {
+		.header {
+			color: #FAFAFA;
+		}
 	}
 }
