@@ -1,13 +1,49 @@
 import { PhotoHandlingState, getInitialPhotoHandlingState, getInitialPhotoSettingsState, PhotoSettingsState } from "../state/photo-state";
 import { Action, AnyAction } from "redux";
-import { SELECT_PHOTO_ACTION, UNSELECT_PHOTO_ACTION, PHOTO_FETCH_REQUESTED_ACTION, PHOTO_FETCH_SUCCEEDED_ACTION, PHOTO_FETCH_FAILED_ACTION, PHOTO_RESET } from "../action/photo-action";
+import { SELECT_PHOTO_ACTION, UNSELECT_PHOTO_ACTION, PHOTO_FETCH_REQUESTED_ACTION, PHOTO_FETCH_SUCCEEDED_ACTION, PHOTO_FETCH_FAILED_ACTION, PHOTO_RESET, ENABLE_SELECTION } from "../action/photo-action";
 import { ALBUM_FETCH_SUCCEEDED_ACTION } from "../action/album-action";
 import { AlbumModel } from "@/domain/models/album";
+import { PhotoModel } from "@/domain/models/photo";
 
 export const photoSettingsReducer = (state: PhotoSettingsState = getInitialPhotoSettingsState(), action: AnyAction) => {
 	switch (action.type) {
 		case PHOTO_RESET:
 			return getInitialPhotoSettingsState();
+		case SELECT_PHOTO_ACTION:
+			{
+				const photo = action.payload as PhotoModel;
+				const uuid = photo.uuid;
+				return {
+					...state,
+					selection: {
+						...state.selection,
+						photos: {
+							...state.selection.photos,
+							[uuid]: photo,
+						}
+					}
+				} as PhotoSettingsState;
+			}
+		case UNSELECT_PHOTO_ACTION:
+			{
+				const uuid = action.payload;
+				const {[uuid]: photo, ...rest} = state.selection.photos;
+				return {
+					...state,
+					selection: {
+						...state.selection,
+						photos: rest
+					}
+				} as PhotoSettingsState;
+			}
+		case ENABLE_SELECTION:
+			return {
+				...state,
+				selection: {
+					...state.selection,
+					enabled: true
+				}
+			} as PhotoSettingsState;
 		default:
 			return state;
 	}
@@ -15,44 +51,6 @@ export const photoSettingsReducer = (state: PhotoSettingsState = getInitialPhoto
 
 export const photoHandlingReducer = (state: PhotoHandlingState = getInitialPhotoHandlingState(), action: AnyAction) => {
 	switch (action.type) {
-		case SELECT_PHOTO_ACTION:
-			{
-				const { payload: uuid } = action as AnyAction;
-				const index = state.photos.findIndex(x => x.uuid === uuid);
-				if (index === -1)
-					return state;
-				const photo = state.photos[index];
-				return {
-					...state,
-					photos: [
-						...state.photos.slice(0, index),
-						{
-							...photo,
-							selected: true
-						},
-						...state.photos.slice(index +1)
-					]
-				};
-			}
-		case UNSELECT_PHOTO_ACTION:
-			{
-				const { payload: uuid } = action as AnyAction;
-				const index = state.photos.findIndex(x => x.uuid === uuid);
-				if (index === -1)
-					return state;
-				const photo = state.photos[index];
-				return {
-					...state,
-					photos: [
-						...state.photos.slice(0, index),
-						{
-							...photo,
-							selected: false
-						},
-						...state.photos.slice(index +1)
-					]
-				};
-			}
 		case PHOTO_FETCH_REQUESTED_ACTION:
 			{
 				return {

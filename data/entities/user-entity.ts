@@ -30,7 +30,7 @@ export class UserEntity extends BaseEntity {
 	hashPassword() {
 		if (this.password) {
 			const rounds = BCrypt.getRounds(this.password);
-			if (isNaN(rounds)) {
+			if (isNaN(rounds) || rounds !== 12) {
 				const salt = BCrypt.genSaltSync(12);
 				const hash = BCrypt.hashSync(this.password, salt);
 				this.password = hash;

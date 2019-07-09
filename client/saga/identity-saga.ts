@@ -4,6 +4,7 @@ import { Action, AnyAction } from "redux";
 import Axios from "axios";
 import { setLoading } from "../redux/action/application-action";
 import { UserRole } from "@/data/enums/user-enums";
+import { ENABLE_SELECTION } from "../redux/action/photo-action";
 
 type SuccessfullLoginPayload = {
 	token: string;
@@ -26,8 +27,10 @@ function *loadIdentity(action: Action) {
 		if (username && username.trim())
 			yield put({ type: SET_USERNAME_ACTION, payload: username });
 		const isAdmin = localStorage.getItem('is_admin');
-		if (isAdmin !== undefined)
+		if (isAdmin !== undefined) {
 			yield put({ type: SET_ISADMIN_ACTION, payload: JSON.parse(isAdmin) });
+		}
+			
 	}
 }
 

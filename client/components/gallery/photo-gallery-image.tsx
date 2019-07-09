@@ -10,6 +10,7 @@ import { PhotoModel } from '@/domain/models/photo';
 import EXIF from 'exif-js';
 import { Checkmark } from '../icons/checkmark-icon';
 import { LazyLoadImage } from '../lazy-load/lazy-load-image';
+import { SelectableImage } from '../image/selectable-image';
 
 export type CustomPhotoProps = Photo & {
 	lazy?: LazyLoadRepo;
@@ -17,40 +18,9 @@ export type CustomPhotoProps = Photo & {
 
 type OwnProps = RenderImageProps<CustomPhotoProps> & {};
 
-type StateProps = {
-	selectionEnabled: boolean;
-};
+export const PhotoGalleryImage = class extends React.Component<OwnProps> {
 
-type DispatchProps = {
-	select: (uuid: string) => void;
-	unselect: (uuid: string) => void;
-}
-
-type Props = OwnProps & StateProps & DispatchProps;
-
-const mapStateToProps: MapStateToProps<StateProps, OwnProps, PhotoModuleOwnState> = state => ({
-	selectionEnabled: state.photoSettings ? state.photoSettings.selection.enabled : false
-});
-
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = dispatch => ({
-	select: uuid => dispatch(selectPhoto(uuid)),
-	unselect: uuid => dispatch(unselectPhoto(uuid))
-});
-
-export const PhotoGalleryImage = connect(mapStateToProps, mapDispatchToProps)(class extends React.Component<Props> {
-
-	private _containerRef: React.RefObject<HTMLDivElement> = React.createRef();
 	private _lazyRef: React.RefObject<LazyLoadImage> = React.createRef();
-
-	onContainerClick = () => {
-		if (!this.props.selectionEnabled)
-			return;
-		if (this.props.photo.selected) {
-			this.props.unselect(this.props.photo.uuid);
-		} else {
-			this.props.select(this.props.photo.uuid);
-		}
-	}
 
 	render = () => {
 		const containerStyle: React.CSSProperties = {}
@@ -64,10 +34,6 @@ export const PhotoGalleryImage = connect(mapStateToProps, mapDispatchToProps)(cl
 			width: this.props.photo.width -20,
 			height: this.props.photo.height -20,
 		};
-		const scaleX = (100 - (30 / this.props.photo.width) * 100) / 100;
-		const scaleY = (100 - (30 / this.props.photo.height) * 100) / 100;
-		if (this.props.photo.selected)
-			imgStyle.transform = `translateZ(0px) scale3d(${scaleX}, ${scaleY}, 1)`;
 
 		const photo = this.props.photo;
 
@@ -86,24 +52,25 @@ export const PhotoGalleryImage = connect(mapStateToProps, mapDispatchToProps)(cl
 
 		return <div
 			ref={element => { this._lazyRef.current.register(element) }}
-			className={`lazy__container ${this.props.selectionEnabled ? 'lazy__container--selectable' : ''}`}
+			className={`lazy__container`}
 			style={{
 				...containerStyle,
 				width: this.props.photo.width,
 				height: this.props.photo.height
-			}}
-			onClick={this.onContainerClick}>
-				<Checkmark selected={this.props.photo.selected} />
-				<LazyLoadImage
-					useSelfRef={false}
-					ref={this._lazyRef}
-					imgClass={'gallery-image ' + (this.props.photo.selected ? `lazy__image--selected` : '')}
-					imgStyle={imgStyle}
-					intersectionElementRef={this._containerRef}
-					lazy={this.props.photo.lazy}
-					src={src} />
+			}}>
+				<SelectableImage {...this.props.photo}>
+					<LazyLoadImage
+						useSelfRef={false}
+						ref={this._lazyRef}
+						imgClass={'gallery-image ' + (this.props.photo.selected ? `lazy__image--selected` : '')}
+						imgStyle={imgStyle}
+						lazy={this.props.photo.lazy}
+						src={src} />
+				</SelectableImage>
+
+				
 			</div>
 	}
-})
+}
 
 export const PhotoGalleryImageContainer = (props: OwnProps) => <PhotoGalleryImage {...props} />

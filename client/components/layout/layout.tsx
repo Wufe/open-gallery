@@ -6,6 +6,8 @@ import { openModal, closeModal } from '@/client/redux/action/modal-action';
 import { Header } from '../header/header';
 import { ModalState, ModalModuleOwnState } from '@/client/redux/state/modal-state';
 import Navigation from '../navigation/navigation';
+import { DynamicModuleLoader } from 'redux-dynamic-modules';
+import { getPhotoModule } from '@/client/redux/module/photo-module';
 
 type OwnProps = {
 	routes: JSX.Element;
@@ -52,7 +54,9 @@ export const Layout = connect(mapStateToProps, mapDispatchToProps)(class extends
 				className={`layout__main-content ${this.props.isOpen ? 'layout__main-content--blur' : ''}`}>
 				<Header title="Elisa e Vito" />
 				{this.props.routes}
-				<Navigation />
+				<DynamicModuleLoader modules={[getPhotoModule()]}>
+					<Navigation />
+				</DynamicModuleLoader>
 			</div>
 			{this.props.isOpen && <div
 				className={`layout__modals-container`}

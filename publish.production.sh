@@ -11,8 +11,9 @@ ssh s01.elisaevito 'cd /tmp/gallery && tar -xzvf src.tar.gz && rm src.tar.gz'
 ssh s01.elisaevito 'cd /tmp/gallery/tmp/release && chmod +x publish.docker.sh && ./publish.docker.sh'
 ssh s01.elisaevito 'mkdir -p /root/gallery && mv /tmp/gallery/tmp/release/docker-compose.production.yml /root/gallery/docker-compose.production.yml && rm -rf /tmp/gallery'
 ssh s01.elisaevito 'cd /root/gallery && docker-compose -f docker-compose.production.yml down && docker-compose -f docker-compose.production.yml rm && docker-compose -f docker-compose.production.yml up -d'
+rm -rf tmp
 ssh s01.elisaevito 'cd /root/gallery && docker-compose -f docker-compose.production.yml logs -f'
-rm rf tmp
+
 # docker save gallery > tmp/gallery.tar
 
 # ssh s01.elisaevito 'cd /tmp && docker load < gallery.tar'

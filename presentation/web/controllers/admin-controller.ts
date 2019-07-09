@@ -7,6 +7,9 @@ import { IOCSymbols } from "@/infrastructure/ioc";
 import Passport from 'passport';
 import { UserModel } from "@/domain/models/user";
 import { UserRole } from "@/data/enums/user-enums";
+import { PhotoFormatEntity } from "@/data/entities/photo-format-entity";
+import { In } from "typeorm";
+import { PhotoEntity } from "@/data/entities/photo-entity";
 
 @autoInjectable()
 export class AdminController extends Controller {
@@ -35,6 +38,41 @@ export class AdminController extends Controller {
 		path: '/test',
 		handler: controller => (req, res) => {
 			res.json({ ok: 'ok' });
+		}
+	}
+
+	removePhotos: ControllerAction<AdminController> = {
+		method: 'post',
+		path: '/photos/delete',
+		handler: controller => (req, res) => {
+			const uuids = req.body.uuids;
+			if (!uuids || !uuids.length){
+				res.status(400).send('No photos to delete.');
+			} else {
+				PhotoEntity
+					.find({
+						where: {
+							uuid: In(uuids)
+						},
+						relations: ['formats']
+					})
+					.then(photos => {
+						const photoFormats = photos.reduce<PhotoFormatEntity[]>((acc, photo) => {
+							return acc.concat(photo.formats);
+						}, []);
+						PhotoFormatEntity.remove(photoFormats)
+							.then(x => {
+								PhotoEntity.remove(photos)
+									.then(x => {
+										res.status(200).json({
+											message: `Deleted ${photos.length} photos and ${photoFormats.length} formats.`
+										});
+									})
+								
+							})
+					})
+			}
+			
 		}
 	}
 

@@ -41,3 +41,7 @@ export const PHOTO_RESET = '@@Photo/Reset';
 export const photoReset = (): Action => ({
 	type: PHOTO_RESET,
 });
+
+export const ENABLE_SELECTION = '@@Photo/EnableSelection';
+
+export const DELETE_PHOTOS = '@@Photo/Delete';

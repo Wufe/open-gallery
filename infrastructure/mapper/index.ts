@@ -28,6 +28,7 @@ export const initMapper = (): Mapper => {
 		.forMember('height', opt => opt.mapFrom(src => src.height))
 		.forMember('width', opt => opt.mapFrom(src => src.width))
 		.forMember('src', opt => opt.mapFrom(src => join(publicUrl, src.src)))
+		.forMember('uuid', opt => opt.mapFrom(src => src.uuid))
 		.forMember('formats', opt =>
 			opt.mapFrom(src =>
 				(src.formats && src.formats.length ?

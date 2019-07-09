@@ -1,0 +1,13 @@
+.selectable-image__container {
+	position: relative;
+	
+	> * {
+		transition: transform .25s cubic-bezier(0.0,0.0,0.2,1);
+	}
+
+	&--selected {
+		> * {
+			transform: translateZ(0px) scale3d(.9, .9, 1);
+		}
+	}
+}

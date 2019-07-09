@@ -11,9 +11,14 @@ export type PhotoHandlingState = {
 	fetching: boolean;
 }
 
+type SelectedPhotosDictionary = {
+	[uuid: string]: PhotoModel;
+}
+
 export type PhotoSettingsState = {
 	selection: {
 		enabled: boolean;
+		photos: SelectedPhotosDictionary;
 	};
 }
 
@@ -30,6 +35,7 @@ export const getInitialPhotoHandlingState = (): PhotoHandlingState => ({
 
 export const getInitialPhotoSettingsState = (): PhotoSettingsState => ({
 	selection: {
-		enabled: false
+		enabled: false,
+		photos: {}
 	}
 });

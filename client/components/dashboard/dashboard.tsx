@@ -4,6 +4,7 @@ import { DynamicModuleLoader } from 'redux-dynamic-modules';
 import { SubHeader } from '../header/sub-header';
 import { getPostModule } from '@/client/redux/module/post-module';
 import loadable from '@loadable/component';
+import { getPhotoModule } from '@/client/redux/module/photo-module';
 
 type OwnProps = {}
 
@@ -20,7 +21,7 @@ const DashboardInner = loadable(() => import('@/client/components/dashboard/dash
 class Dashboard extends React.Component {
 	render() {
 		return <>
-			<DynamicModuleLoader modules={[getPostModule()]}>
+			<DynamicModuleLoader modules={[getPostModule(), getPhotoModule()]}>
 				<DashboardInner />
 			</DynamicModuleLoader>
 		</>;

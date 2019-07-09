@@ -197,7 +197,7 @@ export class PostController extends Controller {
 
 							const ratio = width / height;
 
-							const formats: PhotoFormat[] = [ PhotoFormat.BIG, PhotoFormat.MEDIUM, PhotoFormat.SMALL];
+							const formats: PhotoFormat[] = [/*PhotoFormat.BIG*/, PhotoFormat.MEDIUM, /*PhotoFormat.SMALL*/];
 
 							const formatEntity = new PhotoFormatEntity();
 							formatEntity.src = originalFileName;

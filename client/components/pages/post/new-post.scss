@@ -21,6 +21,7 @@ html {
 
 	.form-action__container {
 		width: 100%;
+		margin: 0 auto;
 		box-sizing: border-box;
 			
 		@include small-up {
@@ -49,6 +50,7 @@ html {
 		justify-content: center;
 		font-family: inherit;
 		background: transparent;
+		cursor: pointer;
 
 		@include light-theme-navigation-background;
 
@@ -78,10 +80,21 @@ html {
 		color: $nord3;
 
 		height: 150px;
+		cursor: pointer;
 
 		&--small {
 			height: 40px;
 			padding: 0;
+			width: 100%;
+			margin: 0 auto;
+
+			@include small-up {
+				max-width: 100%;
+			}
+	
+			@include medium-up {
+				max-width: 300px;
+			}
 		}
 
 		&--bordered {
@@ -118,7 +131,6 @@ html {
 	
 
 	.new-post__form {
-		background: rgba(245, 245, 245, 0.35);
 		border-radius: 3px;
 		box-sizing: border-box;
 		color: $nord3;
