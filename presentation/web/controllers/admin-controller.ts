@@ -57,19 +57,14 @@ export class AdminController extends Controller {
 						relations: ['formats']
 					})
 					.then(photos => {
-						const photoFormats = photos.reduce<PhotoFormatEntity[]>((acc, photo) => {
-							return acc.concat(photo.formats);
-						}, []);
-						PhotoFormatEntity.remove(photoFormats)
-							.then(x => {
-								PhotoEntity.remove(photos)
-									.then(x => {
-										res.status(200).json({
-											message: `Deleted ${photos.length} photos and ${photoFormats.length} formats.`
-										});
-									})
-								
-							})
+						photos
+							.forEach(photo => photo.deleted = true);
+						PhotoEntity.save(photos)
+							.then(() => {
+								res.status(200).json({
+									message: `Cancellate ${photos.length} foto.`
+								});
+							});
 					})
 			}
 			

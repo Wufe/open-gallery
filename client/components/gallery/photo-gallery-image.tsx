@@ -62,7 +62,7 @@ export const PhotoGalleryImage = class extends React.Component<OwnProps> {
 					<LazyLoadImage
 						useSelfRef={false}
 						ref={this._lazyRef}
-						imgClass={'gallery-image ' + (this.props.photo.selected ? `lazy__image--selected` : '')}
+						imgClass={`gallery-image ${this.props.photo.selected ? `lazy__image--selected` : ''}`}
 						imgStyle={imgStyle}
 						lazy={this.props.photo.lazy}
 						src={src} />

@@ -10,6 +10,7 @@ export class PhotoModel {
 	src: string;
 	width: number;
 	height: number;
+	deleted: boolean;
 	description: string;
 	formats: PhotoFormatsDictionary = {};
 }

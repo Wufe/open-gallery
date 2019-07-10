@@ -31,6 +31,9 @@ export class PhotoEntity extends BaseEntity {
 	@Column({ default: '' })
 	description: string = ''
 
+	@Column({ default: false })
+	deleted: boolean;
+
 	@CreateDateColumn()
 	createdAt: string;
 

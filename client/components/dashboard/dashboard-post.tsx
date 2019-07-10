@@ -16,7 +16,7 @@ export default class DashboardPost extends React.Component<Props> {
 
 	render() {
 		return <>
-			<div className="dashboard-post__component">
+			<div className={`dashboard-post__component ${this.props.post.deleted ? 'dashboard-post__component--logically-deleted' : ''}`}>
 				{(this.props.post.description && this.props.post.description.trim()) ?
 					<div className="post__description">
 						<div className="post__edges post__edges--left" />

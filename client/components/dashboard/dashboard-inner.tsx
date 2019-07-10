@@ -10,12 +10,14 @@ import loadable from '@loadable/component';
 
 import './dashboard.scss';
 import DashboardPost from './dashboard-post';
+import { IdentityModuleOwnState } from '@/client/redux/state/identity-state';
 
 type OwnProps = {}
 
 type StateProps = {
 	posts: PostModel[];
 	loading: boolean;
+	isAdmin: boolean;
 }
 
 type DispatchProps = {
@@ -29,10 +31,24 @@ const LazyRepo = loadable.lib(() => import('@/client/repo/lazy-load-repo'), {
 	ssr: false
 });
 
-const mapStateToProps: MapStateToProps<StateProps, OwnProps, PostModuleOwnState & ApplicationModuleOwnState> = state => ({
-	posts: state.post.posts,
-	loading: state.application.loading,
-});
+const mapStateToProps: MapStateToProps<StateProps, OwnProps, PostModuleOwnState & ApplicationModuleOwnState & IdentityModuleOwnState> = state => {
+	const isAdmin = state.identity.isAdmin;
+	let posts: PostModel[] = state.post.posts;
+	if (!isAdmin) {
+		posts = posts
+			.filter(post => !post.deleted)
+			.map(post => ({
+				...post,
+				photos: post.photos
+					.filter(photo => !photo.deleted)
+			}));
+	}
+	return {
+		posts,
+		loading: state.application.loading,
+		isAdmin,
+	}
+};
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = dispatch => ({
 	loadBefore: uuid => dispatch({ type: LOAD_POST_BEFORE_ACTION, payload: uuid }),

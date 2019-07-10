@@ -31,7 +31,7 @@ const mapStateToProps: MapStateToProps<StateProps, OwnProps, PhotoModuleOwnState
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (dispatch, own) => ({
 	selectPhoto: () => {
-		const {description, formats, height, selected, src, uuid, width} = own;
+		const {description, formats, height, selected, src, uuid, width, deleted} = own;
 		return dispatch({ type: SELECT_PHOTO_ACTION, payload: {
 			description,
 			formats,
@@ -39,7 +39,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (dispatc
 			selected,
 			src,
 			uuid,
-			width
+			width,
+			deleted
 		} });
 	},
 	unselectPhoto: () => dispatch({ type: UNSELECT_PHOTO_ACTION, payload: own.uuid }),
@@ -62,7 +63,7 @@ export const SelectableImage = connect(mapStateToProps, mapDispatchToProps)(clas
 			style={{
 				...(this.props.style || {})
 			}}
-			className={`selectable-image__container ${this.props.selected && 'selectable-image__container--selected'}`}
+			className={`selectable-image__container ${this.props.selected && 'selectable-image__container--selected'} ${this.props.deleted ? 'selectable-image__container--deleted' : ''}`}
 			onClick={this.toggleSelection}>
 			<Checkmark selected={this.props.selected} />
 			{this.props.children}

@@ -29,6 +29,7 @@ export const initMapper = (): Mapper => {
 		.forMember('width', opt => opt.mapFrom(src => src.width))
 		.forMember('src', opt => opt.mapFrom(src => join(publicUrl, src.src)))
 		.forMember('uuid', opt => opt.mapFrom(src => src.uuid))
+		.forMember('deleted', opt => opt.mapFrom(src => src.deleted))
 		.forMember('formats', opt =>
 			opt.mapFrom(src =>
 				(src.formats && src.formats.length ?
@@ -50,6 +51,13 @@ export const initMapper = (): Mapper => {
 		.forMember('creator', opt => opt.mapFrom(src => (src.user && src.user.username) || ''))
 		.forMember('description', opt => opt.mapFrom(src => src.description))
 		.forMember('uuid', opt => opt.mapFrom(src => src.uuid))
+		.forMember('deleted', opt => opt.mapFrom(src => {
+			if (!src.photos || !src.photos.length)
+				return false;
+			const filteredPhotos = src.photos
+				.filter(x => !x.deleted);
+			return filteredPhotos.length === 0;
+		}))
 		.forMember('photos', opt =>
 			opt.mapFrom(src =>
 				(src.photos && src.photos.length ?
