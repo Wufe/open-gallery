@@ -38,14 +38,14 @@ export const PhotoGalleryImage = class extends React.Component<OwnProps> {
 		const photo = this.props.photo;
 
 		let src = photo.src;
-		if (photo.formats && photo.formats.medium) {
-			src = photo.formats.medium.src;
+		if (photo.formats && photo.formats.original) {
+			src = photo.formats.original.src;
 		} else {
 			if (photo.formats.big) {
 				src = photo.formats.big.src;
 			} else {
-				if (photo.formats.original) {
-					src = photo.formats.original.src;
+				if (photo.formats.medium) {
+					src = photo.formats.medium.src;
 				}
 			}
 		}

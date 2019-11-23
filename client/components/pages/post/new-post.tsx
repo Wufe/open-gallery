@@ -149,6 +149,7 @@ const NewPostInternal = withRouter(connect(mapStateToProps, mapDispatchToProps)(
 
 	render() {
 		const photos = this.state.photosToBeUploaded;
+		const showThumbs = photos.length < 10;
 		return <div className="new-post__component">
 			<div className="new-post__header">Nuovo post</div>
 			<form className="new-post__form" ref={this.formRef}>
@@ -186,9 +187,10 @@ const NewPostInternal = withRouter(connect(mapStateToProps, mapDispatchToProps)(
 			{photos.length >  0 && <div className="form-action__container">
 				<button className="form-action form-action__cancel" onClick={this.resetForm}>Annulla</button>
 			</div>}
-			{photos.length > 0 && <div className={`new-post__files ${photos.length === 1 ? 'new-post__files--single' : ''}`}>
+			{photos.length > 0 && <div className={`new-post__files ${photos.length === 1 || !showThumbs ? 'new-post__files--single' : ''} `}>
 				{photos.map((photo, index) => <div className="new-post__file" key={index}>
-					<img src={photo.preview} alt={photo.name} />
+					{showThumbs && <img src={photo.preview} alt={photo.name} />}
+					{!showThumbs && <div className="new-post__file-name">{photo.name}</div>}
 				</div>)}
 			</div>}
 		</div>

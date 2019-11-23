@@ -44,8 +44,8 @@ export const initFrontendProxyApp = async () => {
 			.on('data', data => console.error(data.toString()));
 
 		Express()
-			.use(bodyParser.json({ limit: '200mb' }))
-			.use(bodyParser.urlencoded({ extended: true, limit: '200mb' }))
+			.use(bodyParser.json({ limit: '600mb' }))
+			.use(bodyParser.urlencoded({ extended: true, limit: '600mb' }))
 			.use(router)
 			.listen(PORT, () => {
 				console.log(`Listening on port ${PORT}`);

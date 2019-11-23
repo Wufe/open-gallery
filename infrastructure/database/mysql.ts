@@ -28,7 +28,7 @@ export class MysqlDatabaseBuilder implements IDatabaseBuilder {
 				PhotoFormatEntity,
 				UserEntity
 			],
-			synchronize: true,
+			synchronize: !isProd,
 			logger: "simple-console",
 			logging: ["error"]
 		});

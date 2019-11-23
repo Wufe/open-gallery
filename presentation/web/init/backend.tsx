@@ -80,8 +80,8 @@ export const initBackEndApp = async () => {
 	
 	const templateRenderer = new TemplateRenderer();
 
-	router.use(bodyParser.json({ limit: '200mb' }));
-	router.use(bodyParser.urlencoded({ extended: false, limit: '200mb', type: 'application/json' }));
+	router.use(bodyParser.json({ limit: '600mb' }));
+	router.use(bodyParser.urlencoded({ extended: false, limit: '600mb', type: 'application/json' }));
 	router.use(loggerInstance);
 
 	const nodeStats = resolve(process.cwd(), 'dist', './node-stats.json');

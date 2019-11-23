@@ -141,7 +141,7 @@ export class PostController extends Controller {
 			let post = new PostEntity();
 			let username = "";
 			const form = new Formidable.IncomingForm();
-			form.maxFileSize = 200 * 1024 * 1024;
+			form.maxFileSize = 600 * 1024 * 1024;
 			form.on('field', (name: 'description' | 'username', value) => {
 				switch (name) {
 					case 'description':
@@ -197,7 +197,7 @@ export class PostController extends Controller {
 
 							const ratio = width / height;
 
-							const formats: PhotoFormat[] = [/*PhotoFormat.BIG*/, PhotoFormat.MEDIUM, /*PhotoFormat.SMALL*/];
+							const formats: PhotoFormat[] = [PhotoFormat.MEDIUM];
 
 							const formatEntity = new PhotoFormatEntity();
 							formatEntity.src = originalFileName;
@@ -224,6 +224,7 @@ export class PostController extends Controller {
 									formatWidth = Math.round(formatHeight * ratio);
 								}
 
+								
 								const formatFileName = `${format}_${originalName}.jpg`;
 								const formatPath = `${this._uploadDir}/${formatFileName}`;
 

@@ -9,11 +9,12 @@
 		"build:prod": "cross-env NODE_ENV=production yarn build",
 		"dev": "run-s dev:build:watch",
 		"start": "run-p dev:start:server:frontend",
+		"start:mysql": "docker-compose -f ./docker-compose.mysql.yml up -d",
 		"dev:build:watch": "cross-env NODE_ENV=development yarn build:watch",
 		"dev:start:server:backend": "node dist/server-backend.js",
 		"dev:start:server:frontend": "node dist/server-frontend.js",
-		"publish": "./publish.docker.sh",
-		"publish:prod": "./publish.docker.sh && ./publish.production.sh"
+		"publish:local": "./publish.docker.sh && docker-compose up -d && docker-compose logs -f",
+		"publish:prod": "./publish.production.sh"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.4.5",

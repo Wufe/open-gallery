@@ -221,6 +221,7 @@ html {
 
 		&--single {
 			grid-template-columns: 1fr;
+			grid-row-gap: 10px;
 		}
 
 		.new-post__file {
@@ -231,6 +232,13 @@ html {
 				height: auto;
 				box-shadow: 0 0 5px rgba(black, .4);
 				border-radius: 3px;
+			}
+
+			.new-post__filename {
+				white-space: nowrap;
+				max-width: 100%;
+				overflow: hidden;
+				text-overflow: ellipsis;
 			}
 		}
 	}

@@ -4,7 +4,6 @@
 }
 .lazy__image {
 	opacity: 0;
-	visibility: hidden;
 	transition: opacity .25s linear, visibility .25s linear;
 
 	&.lazy__image--orientation-3 {
@@ -21,6 +20,5 @@
 
 	&.lazy__image--visible {
 		opacity: 1;
-		visibility: visible;
 	}
 }
